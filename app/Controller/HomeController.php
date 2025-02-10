@@ -10,5 +10,13 @@ class HomeController extends Controller
        $this->view('Home');
     }
 
+    public function about(){
+        $this->view('About');
+    }
+
+    public function contact(){
+        $this->view('contact');
+    }
+
 }
 

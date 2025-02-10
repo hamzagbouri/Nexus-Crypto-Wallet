@@ -28,8 +28,8 @@ require_once __DIR__.'/../config/config.php';
             </ul>
 
             <li class="nav-link"><a href="./index.html">Home</a></li>
-            <li class="nav-link"><a href="<?=URLROOT?>/AboutController/index">About Us</a></li>
-            <li class="nav-link"><a href="./contact.html">Contact</a></li>
+            <li class="nav-link"><a href="<?=URLROOT?>/HomeController/about">About Us</a></li>
+            <li class="nav-link"><a href="<?=URLROOT?>/HomeController/contact">Contact</a></li>
             <li class="sociallinkContainer">
                 <img class="sociallink" src="./img/fabook-icon-white.svg" alt="">
                 <img class="sociallink" src="./img/twitter-icon-white.svg" alt="">

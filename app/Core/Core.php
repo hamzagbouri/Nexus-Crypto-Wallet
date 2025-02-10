@@ -13,10 +13,10 @@ class Core {
         // Look in controllers for first value
         if(isset($url[0]) ){
             // If exists, set as controller
-            if(file_exists('../app/controller/' . ucwords($url[0]). 'Controller.php'))
+            if(file_exists('../app/controller/' . ucwords($url[0]). '.php'))
             {
-                $this->currentController = ucwords($url[0])."Controller";
-               
+                $this->currentController = ucwords($url[0]);
+                // Unset 0 Index
                 unset($url[0]);
 
             }else {
