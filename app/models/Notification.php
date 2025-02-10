@@ -1,11 +1,11 @@
 <?php
 class Notification {
-    private int $id;
-    private User $user;
-    private string $message;
-    private bool $read;
+    private $id;
+    private $user;
+    private $message;
+    private $read;
 
-    public function __construct(int $id, User $user, string $message, bool $read = false) {
+    public function __construct($id, $user, $message, $read = false) {
         $this->id = $id;
         $this->user = $user;
         $this->message = $message;
@@ -13,43 +13,43 @@ class Notification {
     }
 
     // Getter and Setter for id
-    public function getId(): int {
+    public function getId() {
         return $this->id;
     }
 
-    public function setId(int $id): void {
+    public function setId($id) {
         $this->id = $id;
     }
 
     // Getter and Setter for user
-    public function getUser(): User {
+    public function getUser() {
         return $this->user;
     }
 
-    public function setUser(User $user): void {
+    public function setUser($user) {
         $this->user = $user;
     }
 
     // Getter and Setter for message
-    public function getMessage(): string {
+    public function getMessage() {
         return $this->message;
     }
 
-    public function setMessage(string $message): void {
+    public function setMessage($message) {
         $this->message = $message;
     }
 
     // Getter and Setter for read
-    public function isRead(): bool {
+    public function isRead() {
         return $this->read;
     }
 
-    public function setRead(bool $read): void {
+    public function setRead($read) {
         $this->read = $read;
     }
 
     // Mark notification as read
-    public function markAsRead(): void {
+    public function markAsRead() {
         $this->read = true;
     }
 }

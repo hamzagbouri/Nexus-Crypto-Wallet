@@ -1,26 +1,26 @@
 <?php
 class Wallet {
-    private int $id;
-    private User $user;
-    private array $cryptos;
+    private $id;
+    private $user;
+    private $cryptos;
 
-    public function __construct(int $id, User $user, array $cryptos = []) {
+    public function __construct($id, $user, $cryptos = []) {
         $this->id = $id;
         $this->user = $user;
         $this->cryptos = $cryptos;
     }
 
-    public function getId(): int { return $this->id; }
-    public function getUser(): User { return $this->user; }
-    public function getCryptos(): array { return $this->cryptos; }
+    public function getId() { return $this->id; }
+    public function getUser() { return $this->user; }
+    public function getCryptos() { return $this->cryptos; }
 
-    public function setId(int $id) { $this->id = $id; }
-    public function setUser(User $user) { $this->user = $user; }
-    public function setCryptos(array $cryptos) { $this->cryptos = $cryptos; }
+    public function setId($id) { $this->id = $id; }
+    public function setUser($user) { $this->user = $user; }
+    public function setCryptos($cryptos) { $this->cryptos = $cryptos; }
 
-    public function addCrypto(Crypto $crypto) { $this->cryptos[] = $crypto; }
-    public function removeCrypto(Crypto $crypto) { 
-        $this->cryptos = array_filter($this->cryptos, fn($c) => $c !== $crypto);
+    public function addCrypto($crypto) { $this->cryptos[] = $crypto; }
+    public function removeCrypto($crypto) { 
+        $this->cryptos = array_filter($this->cryptos, function($c) use ($crypto) { return $c !== $crypto; });
     }
 }
 ?>
