@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
   Options -Multiviews
   RewriteEngine On
-  RewriteBase /youdemy-mvc/public
+  RewriteBase /Nexus-Crypto-Wallet/public
 
   # Allow access to assets (CSS, JS, images, etc.)
   RewriteCond %{REQUEST_FILENAME} -f [OR]

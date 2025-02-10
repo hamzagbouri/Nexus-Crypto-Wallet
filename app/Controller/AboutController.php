@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\core\Controller;
 
-class HomeController extends Controller
+class AboutController extends Controller
 {
     public function index(){
-       $this->view('Home');
+       $this->view('About');
     }
 
 }
-
