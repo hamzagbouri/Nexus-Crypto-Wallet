@@ -1,0 +1,19 @@
+{
+    "name": "hamza/ncm",
+    "description": "nexus crypto wallet",
+    "type": "no",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hamza GBOURI",
+            "email": "hamzagbouri2004@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

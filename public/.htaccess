@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+  Options -Multiviews
+  RewriteEngine On
+  RewriteBase /youdemy-mvc/public
+
+  # Allow access to assets (CSS, JS, images, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Redirect all other requests to index.php
+  RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+</IfModule>
