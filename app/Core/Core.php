@@ -10,7 +10,6 @@ class Core {
     public function __construct(){
         $url = $this->getUrl();
 
-        // Look in controllers for first value
         if(isset($url[0]) ){
             // If exists, set as controller
             if(file_exists('../app/controller/' . ucwords($url[0]). 'Controller.php'))
@@ -60,6 +59,7 @@ class Core {
             $url = rtrim($_GET['url'], '/');
             $url = filter_var($url, FILTER_SANITIZE_URL);
             $url = explode('/', $url);
+            print_r( $url);
             return $url;
         }
         return [];
