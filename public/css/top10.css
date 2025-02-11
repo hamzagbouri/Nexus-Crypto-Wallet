@@ -1,0 +1,102 @@
+/* ------------------------------------------- */
+/*  Revised Crypto Table Styling */
+/* ------------------------------------------- */
+
+.crypto-table-section {
+  width: 95%;
+  max-width: 1400px;
+  margin: 2em auto;
+  padding: 2em; /* Increased padding */
+  background-color: var(--lightDark);
+  border-radius: 25px; /* Slightly larger border radius */
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.crypto-table {
+  width: 100%;
+  border-collapse: separate; /* Use 'separate' to control spacing */
+  border-spacing: 0;  /* Remove default spacing if any */
+  color: var(--white);
+}
+
+.crypto-table th, .crypto-table td {
+  padding: 1em; /* Adjusted cell padding */
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);  /* Lighter border */
+}
+
+.crypto-table th {
+  background-color: rgba(0, 0, 0, 0.1); /* Slightly darker header */
+  font-weight: 600; /* Semi-bold header text */
+  text-transform: uppercase;
+  font-size: 0.9em;  /* Increased header font size */
+  letter-spacing: 0.05em; /* Subtle letter spacing for readability */
+}
+
+.crypto-table tbody tr:last-child td {
+  border-bottom: none;  /* Remove border on the last row */
+}
+
+.crypto-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Highlight on hover */
+  transition: background-color 0.2s ease-in-out; /* Smooth transition */
+}
+
+.crypto-table td {
+  font-size: 0.95em; /* Increased font size slightly */
+}
+
+.crypto-table td.up {
+  color: #50D79F;
+}
+
+.crypto-table td.down {
+  color: #FC9531;
+}
+
+.crypto-table img {
+  max-width: 80px; /* Slightly reduced chart image size */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 5px; /* Give charts a subtle rounded corner */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for charts */
+
+}
+
+.crypto-table i.fa-star {
+  color: #FC9531;
+  margin-right: 0.3em;
+}
+
+.crypto-table i.fa-info-circle {
+  color: var(--darkText);
+  cursor: pointer;
+  margin-left: 0.3em;
+  transition: color 0.2s ease-in-out; /* Smooth transition */
+}
+
+.crypto-table i.fa-info-circle:hover {
+  color: var(--lightgrey);
+}
+
+/* Responsive Table (Horizontal Scrolling) */
+@media (max-width: 768px) {
+.crypto-table-section {
+  overflow-x: scroll;
+  padding: 1em; /* Reduced padding on smaller screens */
+}
+.crypto-table {
+  min-width: 850px; /* Adjusted minimum width */
+}
+.crypto-table th, .crypto-table td {
+  padding: 0.7em; /* Adjusted cell padding for smaller screens */
+}
+}
+
+/* Additional Styles for Ranking */
+.crypto-table td:first-child {
+font-weight: 600; /* Bold ranking number */
+color: var(--white);
+}
