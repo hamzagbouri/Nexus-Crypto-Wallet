@@ -15,7 +15,7 @@
     />
   </head>
   <body>
-    <?php require_once __DIR__. './../inc/navbar.php'?>
+    <?php require_once __DIR__. '/../inc/navbar.php'?>
 
     <main>
       <div class="crypto-table-section">
