@@ -32,6 +32,7 @@
             <?php if (!empty($data)): ?>
             <?php foreach ($data as $index => $crypto): ?>
             <?php
+
             // Extraction du prix et du changement en 24h depuis la description
             preg_match('/The last known price of .* is ([\d,\.]+) USD and is (down|up) ([\d\.]+) over the last 24 hours/', $crypto['description'], $matches);
 
@@ -41,9 +42,9 @@
             <tr class="border-b border-gray-700">
                 <td class="p-3"><?= $index + 1 ?></td>
                 <td class="p-3"><?= htmlspecialchars($crypto['name']) ?> (<?= strtoupper(htmlspecialchars($crypto['symbol'])) ?>)</td>
-                <td class="p-3">$<?= number_format($price, 2) ?></td>
-                <td class="p-3 <?= $change_24h >= 0 ? 'text-green-500' : 'text-red-500' ?>">
-                    <?= $change_24h ?>%
+                <td class="p-3">$<?= $crypto['price'] ?></td>
+                <td class="p-3 <?= $crypto['change_24h'] >= 0 ? 'text-green-500' : 'text-red-500' ?>">
+                    <?= $crypto['change_24h'] ?>%
                 </td>
                 <td class="p-3 flex justify-center gap-2">
                     <button class="buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -54,7 +55,7 @@
                             data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $price ?>">
                         Sell
                     </button>
-                    <button class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</button>
+                    <a href="/nexus-crypto-wallet/watchlist/supprimer/<?=$crypto['slug']?>" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</a>
                 </td>
             </tr>
             <?php endforeach; ?>
