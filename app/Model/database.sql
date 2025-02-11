@@ -15,19 +15,6 @@ CREATE TABLE users (
 );
 
 -- Crypto Table
-CREATE TABLE crypto (
-                        id_crypto SERIAL PRIMARY KEY,
-                        nom VARCHAR(255),
-                        symbol VARCHAR(255),
-                        slug VARCHAR(255),
-                        max_supply FLOAT,
-                        market_cap FLOAT,
-                        price FLOAT,
-                        volume_24h FLOAT,
-                        circulating_supply FLOAT,
-                        total_supply FLOAT,
-                        date_insertion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 -- Wallet Table (One Wallet per User)
 CREATE TABLE wallet (
@@ -40,11 +27,9 @@ CREATE TABLE wallet (
 -- Wallet-Crypto Junction Table (Many-to-Many)
 CREATE TABLE wallet_crypto (
                                id_wallet INT,
-                               id_crypto INT,
+                               id_crypto varchar(255),
                                amount FLOAT DEFAULT 0,
-                               PRIMARY KEY (id_wallet, id_crypto),
-                               FOREIGN KEY (id_wallet) REFERENCES wallet(id_wallet) ON DELETE CASCADE,
-                               FOREIGN KEY (id_crypto) REFERENCES crypto(id_crypto) ON DELETE CASCADE
+                               FOREIGN KEY (id_wallet) REFERENCES wallet(id_wallet) ON DELETE CASCADE
 );
 
 -- Transactions Table (User ↔ Crypto)
@@ -56,17 +41,18 @@ CREATE TABLE transaction (
                              transaction_date DATE,
                              id_user INT,
                              id_receiver INT,
-                             id_crypto INT,
+                             id_crypto varchar(255) unique ,
+                             prix_crypto FLOAT,
                              date_transaction TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                              FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
-                             FOREIGN KEY (id_receiver) REFERENCES users(id_user) ON DELETE CASCADE,
-                             FOREIGN KEY (id_crypto) REFERENCES crypto(id_crypto) ON DELETE CASCADE
+                             FOREIGN KEY (id_receiver) REFERENCES users(id_user) ON DELETE CASCADE
 );
 
 -- Watchlist Table (One Watchlist per User)
 CREATE TABLE watchlist (
                            id_watchlist SERIAL PRIMARY KEY,
-                           id_user INT UNIQUE,
+                           id_user INT ,
+                           id_crypto varchar(255) ,
                            date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
@@ -74,10 +60,9 @@ CREATE TABLE watchlist (
 -- Watchlist-Crypto Junction Table (Many-to-Many)
 CREATE TABLE watchlist_crypto (
                                   id_watchlist INT,
-                                  id_crypto INT,
+                                  id_crypto varchar(255),
                                   PRIMARY KEY (id_watchlist, id_crypto),
-                                  FOREIGN KEY (id_watchlist) REFERENCES watchlist(id_watchlist) ON DELETE CASCADE,
-                                  FOREIGN KEY (id_crypto) REFERENCES crypto(id_crypto) ON DELETE CASCADE
+                                  FOREIGN KEY (id_watchlist) REFERENCES watchlist(id_watchlist) ON DELETE CASCADE
 );
 
 -- Notification Table (User ↔ Notifications)

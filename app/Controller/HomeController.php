@@ -3,11 +3,12 @@
 namespace App\Controller;
 
 use App\core\Controller;
+use App\Model\Watchlist;
 
 class HomeController extends Controller
 {
     public function index(){
-        echo "Home Page";
+
         $this->view('index');
     }
     public function login()
@@ -27,8 +28,20 @@ class HomeController extends Controller
     }
     public function watchList()
     {
-        echo 'watchList';
-        $this->view('pages/watchList');
+        // Récupérer les cryptos enregistrées dans la watchlist
+        $watchlist = Watchlist::getAll(1); // Remplace 1 par l'ID de l'utilisateur dynamique
+
+        // Récupérer les informations des cryptos via l'API
+        $cryptoData = [];
+        foreach ($watchlist->getCryptos() as $crypto) {
+
+            $cryptoInfo = file_get_contents("http://localhost/Nexus-crypto-wallet/api/getcrypto/$crypto");
+            $cryptoData[] = json_decode($cryptoInfo, true);
+        }
+
+        // Passer les données à la vue
+        $this->view('pages/watchList', $cryptoData);
     }
+
 
 }

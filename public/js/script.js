@@ -25,8 +25,7 @@
             <td class="${priceClass}">${change24h}%</td>
             <td><img src="../img/chart-placeholder.png" alt="${coin.name} Chart" /></td>
             <td>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-info-circle"></i>
+              <a href="/nexus-crypto-wallet/watchlist/add/${coin.slug}"  class="bg-[#3d51f2] px-2 py-2 rounded-xl cursor-pointer"> Ajouter au watchlist </a>
             </td>
           </tr>
         `;
