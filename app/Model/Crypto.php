@@ -1,4 +1,5 @@
 <?php
+namespace App\Model;
 class Crypto {
     private $id;
     private $nom;
@@ -24,51 +25,51 @@ class Crypto {
         $this->total_supply = $total_supply;
     }
 
-    public static function getAllCryptos(): array {
+    public static function getAllCryptos() {
         return [];  // Placeholder
     }
 
-    public static function findBySymbol(string $symbol): ?Crypto {
+    public static function findBySymbol( $symbol) {
         return null; // Placeholder
     }
 
-    public function getId(): int {
+    public function getId() {
         return $this->id;
     }
 
-    public function getNom(): string {
+    public function getNom() {
         return $this->nom;
     }
 
-    public function getSymbol(): string {
+    public function getSymbol(){
         return $this->symbol;
     }
 
-    public function getSlug(): string {
+    public function getSlug() {
         return $this->slug;
     }
 
-    public function getMaxSupply(): float {
+    public function getMaxSupply(){
         return $this->max_supply;
     }
 
-    public function getMarketCap(): float {
+    public function getMarketCap() {
         return $this->market_cap;
     }
 
-    public function getPrice(): float {
+    public function getPrice(){
         return $this->price;
     }
 
-    public function getVolume24h(): float {
+    public function getVolume24h() {
         return $this->volume_24h;
     }
 
-    public function getCirculatingSupply(): float {
+    public function getCirculatingSupply() {
         return $this->circulating_supply;
     }
 
-    public function getTotalSupply(): float {
+    public function getTotalSupply() {
         return $this->total_supply;
     }
 }

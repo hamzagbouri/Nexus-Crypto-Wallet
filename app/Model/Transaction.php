@@ -1,24 +1,32 @@
 <?php
-require_once 'User.php';
-require_once 'Crypto.php';
+namespace App\Model;
+use App\Model\User;
+use App\Model\Crypto;
 class Transaction {
     private $id;
     private $amount;
     private $transaction_type;
     private $status;
     private $date;
-    private User $user;  
-    private Crypto $crypto; 
+    private $user_id;
+    private $crypto_id;
+    private $user;
+    private $crypto;
 
-    public function __construct($id, $amount, $transaction_type, $status, $date, User $user, Crypto $crypto) {
+    public function __construct($id, $amount, $transaction_type, $status, $date, $user_id = null, $crypto_id = null) {
         $this->id = $id;
         $this->amount = $amount;
         $this->transaction_type = $transaction_type;
         $this->status = $status;
         $this->date = $date;
-        $this->user = $user;
-        $this->crypto = $crypto;
+        $this->user_id = $user_id;
+        $this->crypto_id = $crypto_id;
+
+        // Initialize the user and crypto objects if IDs are provided
+        $this->user = ($user_id !== null) ? User::getById($user_id) : null;
+        $this->crypto = ($crypto_id !== null) ? Crypto::getById($crypto_id) : null;
     }
+
 
     public function executeTransaction() {
         // Implementation

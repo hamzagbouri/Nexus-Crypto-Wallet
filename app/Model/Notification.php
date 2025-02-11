@@ -1,12 +1,13 @@
 <?php
-require_once 'User.php';
+namespace App\Model;
+use App\Model\User;
 class Notification {
     private $id;
     private $message;
     private $date;
-    private User $user; 
+    private $user;
 
-    public function __construct($id, $message, $date, User $user) {
+    public function __construct($id, $message, $date, $user = null) {
         $this->id = $id;
         $this->message = $message;
         $this->date = $date;
@@ -29,7 +30,7 @@ class Notification {
         return $this->date;
     }
 
-    public function getUser(): User {
+    public function getUser() {
         return $this->user;
     }
 }

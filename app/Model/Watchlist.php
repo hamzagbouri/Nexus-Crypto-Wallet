@@ -1,8 +1,8 @@
 <?php
-require_once 'User.php';
+namespace App\Model;
 class Watchlist {
     private $id;
-    private User $user; 
+    private  $user;
     
     public function __construct($id, User $user) {
         $this->id = $id;
