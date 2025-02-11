@@ -6,6 +6,7 @@
     <title>Watch List</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/watchList.css" />
+      <link rel="stylesheet" href="./css/wallet.css" />
   </head>
   <body>
 
@@ -78,5 +79,6 @@
         <!-- Add more items as needed -->
       </div>
     </div>
+  <script src="../js/wallet.js"></script>
   </body>
 </html>

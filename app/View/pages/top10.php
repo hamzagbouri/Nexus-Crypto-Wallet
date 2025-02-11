@@ -6,6 +6,7 @@
     <title>Top Crypto Coins</title>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/top10.css" />
+      <link rel="stylesheet" href="../css/wallet.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -15,7 +16,7 @@
     />
   </head>
   <body>
-    <?php require_once __DIR__. './../inc/navbar.php'?>
+    <?php require_once __DIR__. '/../inc/navbar.php'?>
 
     <main>
       <div class="crypto-table-section">
@@ -100,6 +101,7 @@
         </p>
       </div>
     </footer>
-  <script src="../js/script.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/wallet.js"></script>
   </body>
 </html>
