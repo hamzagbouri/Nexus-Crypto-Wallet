@@ -9,7 +9,7 @@
   </head>
   <body>
 
-    <?php require_once __DIR__. './../inc/navbar.php'?>
+    <?php require_once __DIR__. '/../inc/navbar.php'?>
 
 
     <div class="watchlist-container">

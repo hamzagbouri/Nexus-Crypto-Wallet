@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
-<?php require_once __DIR__. './../inc/navbar.php'?>
+<?php require_once __DIR__. '/../inc/navbar.php'?>
     <div class="login-page">
       <div class="login-container">
           <div class="login-form">

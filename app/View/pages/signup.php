@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="../css/signup.css">
 </head>
 <body>
-<?php require_once __DIR__. './../inc/navbar.php'?>
+<?php require_once __DIR__. '/../inc/navbar.php'?>
     <div class="signup-page">
         <div class="signup-container">
             <div class="signup-form">
                 <h2>Sign Up</h2>
-                <form>
+                <form  action="/nexus-crypto-wallet/Auth/signup" method="post">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
@@ -27,16 +27,16 @@
                         <input type="email" id="email" name="email" placeholder="Enter your email">
                     </div>
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" placeholder="Choose a username">
+                        <label for="username">date of birth</label>
+                        <input type="date" id="username" name="birthdate" placeholder="Choose a username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="Enter your password">
                     </div>
                     <div class="form-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+                        <label for="confirmPassword">USDT Blance</label>
+                        <input type="number" id="confirmPassword" name="usdt_balance" placeholder="">
                     </div>
                     <button type="submit" class="signup-btn">Sign Up</button>
                 </form>

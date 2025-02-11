@@ -2,6 +2,7 @@
 namespace App\Model;
 use PDO;
 use PDOException;
+use Exception;
 
 class Database {
     private static $instance = null;
@@ -19,9 +20,9 @@ class Database {
 
     public static function getInstance($dsn = null, $username = null, $password = null) {
         if (self::$instance === null) {
-            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=youdemy';
+            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=Nexus';
             $username = $username ?? 'postgres';
-            $password = $password ?? 'shraika';
+            $password = $password ?? 'kaoutar';
             self::$instance = new Database($dsn, $username, $password);
         }
         return self::$instance;

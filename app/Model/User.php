@@ -1,30 +1,109 @@
 <?php
 namespace App\Model;
+use PDO;
 class User {
     private $id;
-    private $full_name;
+    private $nom;
+    private$prenom;
     private $date_naissance;
     private $nexus_id;
     private $email;
     private $password;
     private $usdt_balance;
 
-    public function __construct($id, $full_name, $date_naissance, $nexus_id, $email, $password, $usdt_balance) {
+    public function __construct($id, $nom,$prenom, $date_naissance,  $email, $password, $usdt_balance) {
         $this->id = $id;
-        $this->full_name = $full_name;
+        $this->nom = $nom;
+        $this->prenom=$prenom;
         $this->date_naissance = $date_naissance;
-        $this->nexus_id = $nexus_id;
+        $this->nexus_id = $this->GenerNexus_ID();
         $this->email = $email;
-        $this->password = $password;
+        $this->password =  $this->hashPassword($password);;
         $this->usdt_balance = $usdt_balance;
     }
 
-    public function registre() {
+    private function GenerNexus_ID() {
+        $nexus_id='NC' . str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        if($this->verifyNexusID($nexus_id)){
+           $nexus_id= $this->GenerNexus_ID();
+        }
+        return $nexus_id;
+    }
+    private function hashPassword($password) {
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    
+
+    // Vérification si le Nexus ID existe 
+    private function verifyNexusID($nexus_id) {
+        $db=Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE nexus_id = :nexus_id");
+        $stmt->bindParam(':nexus_id', $nexus_id, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        // Si le Nexus ID existe on retourne true 
+        $count = $stmt->fetchColumn();
+        return $count > 0;
+    }
+
+    public static function verifyEmail($email) {
+      
+        $db = Database::getInstance()->getConnection();
+        
+       
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+       
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        
+       
+        $stmt->execute();
+        
+       
+        $count = $stmt->fetchColumn();
+        
+       
+        return $count > 0;
+    }
+    
+    public static function registre($nom, $prenom, $date_naissance, $email, $password, $usdt_balance) {
+        // Vérifier si l'email est déjà pris
+        if (self::verifyEmail($email)) {
+            return "Cet email est déjà utilisé.";
+        }
+
+        
+       
+
+       
+        $user = new User(null, $nom , $prenom, $date_naissance, $email, $password, $usdt_balance);
+
+        
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("INSERT INTO users (nom,prenom, date_naissance, nexus_id, email, password, usdt_balance) 
+                              VALUES (:nom,:prenom, :date_naissance, :nexus_id, :email, :password, :usdt_balance)");
+
+        $stmt->bindParam(':nom', $user->nom);
+        $stmt->bindParam(':prenom', $user->prenom);
+        $stmt->bindParam(':date_naissance', $user->date_naissance);
+        $stmt->bindParam(':nexus_id', $user->nexus_id);
+        $stmt->bindParam(':email', $user->email);
+        $stmt->bindParam(':password', $user->password);
+        $stmt->bindParam(':usdt_balance', $user->usdt_balance);
+
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Retourner un message de succès
+        return "Utilisateur enregistré avec succès!";
+    }
+
+    public static  function login() {
         // Implementation
     }
 
-    public function login() {
-        // Implementation
+    public static function  logout(){
+
     }
 
     public function getBalance() {
@@ -48,8 +127,12 @@ class User {
         return $this->id;
     }
 
-    public function getFullName() {
-        return $this->full_name;
+    public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPrenom() {
+        return $this->prenom;
     }
 
     public function getDateNaissance() {
