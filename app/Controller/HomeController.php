@@ -8,6 +8,7 @@ class HomeController extends Controller
 {
     public function index(){
         echo "Home Page";
+        $this->view('index');
     }
     public function login()
     {
