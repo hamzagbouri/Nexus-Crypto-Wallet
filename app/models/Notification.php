@@ -1,56 +1,36 @@
 <?php
+require_once 'User.php';
 class Notification {
     private $id;
-    private $user;
     private $message;
-    private $read;
+    private $date;
+    private User $user; 
 
-    public function __construct($id, $user, $message, $read = false) {
+    public function __construct($id, $message, $date, User $user) {
         $this->id = $id;
-        $this->user = $user;
         $this->message = $message;
-        $this->read = $read;
+        $this->date = $date;
+        $this->user = $user;
     }
 
-    // Getter and Setter for id
+    public function sendNotification() {
+        // Implementation
+    }
+
     public function getId() {
         return $this->id;
     }
 
-    public function setId($id) {
-        $this->id = $id;
-    }
-
-    // Getter and Setter for user
-    public function getUser() {
-        return $this->user;
-    }
-
-    public function setUser($user) {
-        $this->user = $user;
-    }
-
-    // Getter and Setter for message
     public function getMessage() {
         return $this->message;
     }
 
-    public function setMessage($message) {
-        $this->message = $message;
+    public function getDate() {
+        return $this->date;
     }
 
-    // Getter and Setter for read
-    public function isRead() {
-        return $this->read;
-    }
-
-    public function setRead($read) {
-        $this->read = $read;
-    }
-
-    // Mark notification as read
-    public function markAsRead() {
-        $this->read = true;
+    public function getUser(): User {
+        return $this->user;
     }
 }
 ?>

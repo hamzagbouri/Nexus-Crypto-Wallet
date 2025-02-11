@@ -1,26 +1,28 @@
 <?php
+require_once 'User.php';
 class Watchlist {
     private $id;
-    private $user;
-    private $cryptos;
-
-    public function __construct($id, $user, $cryptos = []) {
+    private User $user; 
+    
+    public function __construct($id, User $user) {
         $this->id = $id;
         $this->user = $user;
-        $this->cryptos = $cryptos;
     }
 
-    public function getId() { return $this->id; }
-    public function getUser() { return $this->user; }
-    public function getCryptos() { return $this->cryptos; }
+    public function addCrypto($crypto) {
+        // Implementation
+    }
 
-    public function setId($id) { $this->id = $id; }
-    public function setUser($user) { $this->user = $user; }
-    public function setCryptos($cryptos) { $this->cryptos = $cryptos; }
+    public function removeCrypto($crypto) {
+        // Implementation
+    }
 
-    public function addCrypto($crypto) { $this->cryptos[] = $crypto; }
-    public function removeCrypto($crypto) { 
-        $this->cryptos = array_filter($this->cryptos, function($c) use ($crypto) { return $c !== $crypto; });
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getUser(): User {
+        return $this->user;
     }
 }
 ?>

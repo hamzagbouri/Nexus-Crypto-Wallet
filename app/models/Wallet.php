@@ -1,26 +1,45 @@
 <?php
+require_once 'User.php';
 class Wallet {
     private $id;
-    private $user;
-    private $cryptos;
+    private $amount;
+    private User $user; 
 
-    public function __construct($id, $user, $cryptos = []) {
+    public function __construct($id, $amount, User $user) {
         $this->id = $id;
+        $this->amount = $amount;
         $this->user = $user;
-        $this->cryptos = $cryptos;
     }
 
-    public function getId() { return $this->id; }
-    public function getUser() { return $this->user; }
-    public function getCryptos() { return $this->cryptos; }
+    public function getBlance($crypto) {
+        // Implementation
+        return $this->amount;  // Placeholder
+    }
 
-    public function setId($id) { $this->id = $id; }
-    public function setUser($user) { $this->user = $user; }
-    public function setCryptos($cryptos) { $this->cryptos = $cryptos; }
+    public function addFunds($amount) {
+        // Implementation
+        $this->amount += $amount;
+    }
 
-    public function addCrypto($crypto) { $this->cryptos[] = $crypto; }
-    public function removeCrypto($crypto) { 
-        $this->cryptos = array_filter($this->cryptos, function($c) use ($crypto) { return $c !== $crypto; });
+    public function withdrawFunds($amount) {
+        // Implementation
+        $this->amount -= $amount;
+    }
+
+    public function transfersFunds($amount, $receiver, $crypto) {
+        // Implementation
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getAmount() {
+        return $this->amount;
+    }
+
+    public function getUser(): User {
+        return $this->user;
     }
 }
 ?>
