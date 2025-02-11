@@ -31,28 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Bitcoin (BTC)</td>
-              <td class="up">$34,000</td>
-              <td class="up">+2.5%</td>
-              <td><img src="../img/bitcoin-chart.png" alt="Bitcoin Chart" /></td>
-              <td>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-info-circle"></i>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Ethereum (ETH)</td>
-              <td class="down">$1,800</td>
-              <td class="down">-1.2%</td>
-              <td><img src="../img/ethereum-chart.png" alt="Ethereum Chart" /></td>
-              <td>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-info-circle"></i>
-              </td>
-            </tr>
+
             <!-- Add more rows as needed -->
           </tbody>
         </table>
@@ -121,5 +100,6 @@
         </p>
       </div>
     </footer>
+  <script src="../js/script.js"></script>
   </body>
 </html>
