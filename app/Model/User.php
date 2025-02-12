@@ -13,17 +13,34 @@ class User {
     private $password;
     private $usdt_balance;
 
-    public function __construct($id, $nom,$prenom, $date_naissance,  $email, $password, $usdt_balance) {
+    public function __construct($id, $nom,$prenom, $date_naissance,$nexus_id, $email, $password, $usdt_balance) {
         $this->id = $id;
         $this->nom = $nom;
         $this->prenom=$prenom;
         $this->date_naissance = $date_naissance;
-        $this->nexus_id = $this->GenerNexus_ID();
+        $this->nexus_id = $nexus_id;
         $this->email = $email;
-        $this->password =  $this->hashPassword($password);;
+        $this->password =  $this->hashPassword($password) ?? null;
         $this->usdt_balance = $usdt_balance;
     }
-
+    public static function getById($id_user) {
+        $pdo = Database::getInstance()->getConnection();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id_user = :user_id");
+        $stmt->bindValue(':user_id', $id_user);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = new User(
+            $res['id_user'],
+            $res['nom'],
+            $res['prenom'],
+            $res['date_naissance'],
+            $res['nexus_id'], // Ajout du Nexus ID
+            $res['email'],
+            $res['password'],
+            $res['usdt_balance']
+        );
+        return $user;
+    }
     private function GenerNexus_ID() {
         $nexus_id='NC' . str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
         if($this->verifyNexusID($nexus_id)){
@@ -68,19 +85,13 @@ class User {
         return $count > 0;
     }
     
-    public static function registre($nom, $prenom, $date_naissance, $email, $password, $usdt_balance) {
+    public static function registre($nom, $prenom, $date_naissance,  $email, $password, $usdt_balance) {
         // Vérifier si l'email est déjà pris
         if (self::verifyEmail($email)) {
             return "Cet email est déjà utilisé.";
         }
-
-        
-       
-
-       
-        $user = new User(null, $nom , $prenom, $date_naissance, $email, $password, $usdt_balance);
-
-        
+        $user = new User(null, $nom , $prenom, $date_naissance,null, $email, $password, $usdt_balance);
+        $nexus = $user->GenerNexus_ID();
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("INSERT INTO users (nom,prenom, date_naissance, nexus_id, email, password, usdt_balance) 
                               VALUES (:nom,:prenom, :date_naissance, :nexus_id, :email, :password, :usdt_balance)");
@@ -88,7 +99,7 @@ class User {
         $stmt->bindParam(':nom', $user->nom);
         $stmt->bindParam(':prenom', $user->prenom);
         $stmt->bindParam(':date_naissance', $user->date_naissance);
-        $stmt->bindParam(':nexus_id', $user->nexus_id);
+        $stmt->bindParam(':nexus_id', $nexus);
         $stmt->bindParam(':email', $user->email);
         $stmt->bindParam(':password', $user->password);
         $stmt->bindParam(':usdt_balance', $user->usdt_balance);
@@ -133,7 +144,7 @@ class User {
 
 //                Session::validateSession($result);
 
-                return $result['nexus_id']; // Connexion réussie
+                return $result['id_user']; // Connexion réussie
             }else {return false;}
         }else {return false;}
 

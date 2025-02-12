@@ -54,7 +54,8 @@ class AuthController extends Controller{
             $code=$_POST['code'];
 
              if($code == $_SESSION['code']){
-                Session::validateSession($user);
+                 $userObjet = User::getById($user);
+                Session::validateSession($userObjet);
                unset($_SESSION['code']);
                 header('location: /Nexus-crypto-wallet/Home/watchList');
                 exit;

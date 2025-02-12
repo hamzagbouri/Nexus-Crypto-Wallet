@@ -9,8 +9,11 @@ use App\Model\Watchlist;
 class WatchListController extends Controller
 {
     public function add($slug){
-        $user_id = 1;
+
         Session::ActiverSession();
+        $user = unserialize($_SESSION['userData']);
+
+        $user_id = $user->getId();
         if(!isset($_SESSION['userData']))
         {
 
@@ -28,7 +31,11 @@ class WatchListController extends Controller
     }
     public function check($slug)
     {
-        echo json_encode(Watchlist::checkCrypto( $slug, 1));
+        Session::ActiverSession();
+        $user = unserialize($_SESSION['userData']);
+
+        $user_id = $user->getId();
+        echo json_encode(Watchlist::checkCrypto( $slug, $user_id));
 
     }
 

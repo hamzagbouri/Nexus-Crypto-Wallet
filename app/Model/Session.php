@@ -15,7 +15,7 @@ class Session {
         }
     
         // Stocker toutes les informations utilisateur dans la session
-        $_SESSION['userData'] = $userData;
+        $_SESSION['userData'] = serialize($userData);
     
         // Vérifier si la session est correctement configurée
         if (empty($_SESSION['userData'])) {
