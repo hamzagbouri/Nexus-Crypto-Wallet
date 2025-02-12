@@ -2,169 +2,92 @@
 namespace App\Model;
 use App\Model\User;
 use App\Model\Crypto;
-use App\Model;
 use PDO;
 
 class Transaction {
-    private $id;
-    private $amount;
-    private $transaction_type;
-    private $status;
-    private $date;
-    private $user_id;
-    private $crypto_id;
-    private $user;
-    private $crypto;
     private $pdo;
-
-    public function __construct($id, $amount, $transaction_type, $status, $date, $user_id = null, $crypto_id = null) {
-        $this->id = $id;
-        $this->amount = $amount;
-        $this->transaction_type = $transaction_type;
-        $this->status = $status;
-        $this->date = $date;
-        $this->user_id = $user_id;
-        $this->crypto_id = $crypto_id;
-        
-        $this->user = ($user_id !== null) ? User::getById($user_id) : null;
-        $this->crypto = ($crypto_id !== null) ? Crypto::getById($crypto_id) : null;
-        
-        $this->pdo =Database::getInstance();
+    
+    public function __construct() {
+        $this->pdo = Database::getInstance()->getConnection();
     }
-
-    public function getBalance($userId) {
-        $query = "SELECT usdt_balance FROM users WHERE id = :id_user";
+    
+    public function getUserBalance($userId) {
+        $query = "SELECT usdt_balance FROM users WHERE id = :userId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id_user', $userId);
+        $stmt->bindParam(':userId',$userId);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $result ? $result['usdt_balance'] : false;
+        return $stmt->fetch(PDO::FETCH_ASSOC)['usdt_balance'] ?? false;
     }
-
-    public function updateBalance($userId, $payment) {
-        $query = "UPDATE users SET usdt_balance = usdt_balance - :payment WHERE id = :user_id";
+    
+    public function getCryptoBalance($walletId, $cryptoId) {
+        $query = "SELECT balance FROM wallet_cryptos WHERE wallet_id = :walletId AND crypto_id = :cryptoId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue('payment', $payment);
-        $stmt->bindValue('user_id', $userId);
-        return $stmt->execute();
+        $stmt->bindParam(':walletId',$walletId);
+        $stmt->bindParam(':cryptoId',$cryptoId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['balance'] ?? false;
     }
-
-    public function updateCrypto($userId, $slug, $payment) {
-        $query = "UPDATE wallets SET balance = balance + :payment WHERE user_id = :user_id AND slug = :slug";
+    
+    
+    public function createTransaction($senderId, $cryptoId, $amount, $type) {
+        $query = "INSERT INTO transactions (sender_id, crypto_id, amount, transaction_type, status) 
+                 VALUES (:senderId, :cryptoId, :amount, :type, 'pending') RETURNING id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue('payment', $payment);
-        $stmt->bindValue('user_id', $userId);
-        $stmt->bindValue('slug', $slug);
-        return $stmt->execute();
+
+        $stmt->execute([$senderId, $cryptoId, $amount, $type]);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['id'];
     }
-
-    public function calcAmountToPayInUSDT($price, $amount) {
-        return $price * $amount;
+    
+    public function updateUserBalance($userId, $amount) {
+        $query = "UPDATE users SET usdt_balance = usdt_balance + $1 WHERE id = $2";
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute([$amount, $userId]);
     }
-
-    public function calcCryptoForUSDT($price, $usdtAmount) {
-        return $usdtAmount / $price;
+    
+    public function updateCryptoBalance($walletId, $cryptoId, $amount) {
+        $query = "INSERT INTO wallet_cryptos (wallet_id, crypto_id, balance) 
+                 VALUES ($1, $2, $3)
+                 ON CONFLICT (wallet_id, crypto_id) 
+                 DO UPDATE SET balance = wallet_cryptos.balance + $3";
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute([$walletId, $cryptoId, $amount]);
     }
-
-    public function processTransaction($userId, $slug, $price, $amount, $isPayingWithUSDT) {
-        if ($isPayingWithUSDT) {
-            $cryptoAmount = $this->calcCryptoForUSDT($price, $amount);
-
-            $balance = $this->getBalance($userId);
-
-            if ($balance >= $amount) {
-                $this->updateCrypto($userId, $slug, $cryptoAmount);
-                $this->updateBalance($userId, $amount);
-                return true;
-            } else {
-                return false;  
+    
+    public function updateTransactionStatus($transactionId, $status) {
+        $query = "UPDATE transactions SET status = $1 WHERE id = $2";
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute([$status, $transactionId]);
+    }
+    
+    public function buyCrypto($userId, $cryptoId, $amount) {
+        
+            $price = $this->getCryptoPrice($cryptoId);
+            $costInUsdt = $price * $amount;
+            $userBalance = $this->getUserBalance($userId);
+            
+            if ($userBalance < $costInUsdt) {
+                $this->pdo->rollBack();
+                return ['success' => false, 'message' => 'Insufficient balance'];
             }
-        } else {
-            $usdtAmount = $this->calcAmountToPayInUSDT($price, $amount);
-
-            $balance = $this->getBalance($userId);
-
-            if ($balance >= $usdtAmount) {
-                $this->updateCrypto($userId, $slug, $amount);
-                $this->updateBalance($userId, $usdtAmount);
-                return true;
-            } else {
-                return false;
-            }
-        }
+            
+            $transactionId = $this->createTransaction($userId, $cryptoId, $amount, 'buy','complited',);
+            
+            $walletQuery = "SELECT id FROM wallets WHERE user_id = $1";
+            $stmt = $this->pdo->prepare($walletQuery);
+            $stmt->execute([$userId]);
+            $walletId = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
+            
+            $this->updateUserBalance($userId, -$costInUsdt);
+            $this->updateCryptoBalance($walletId, $cryptoId, $amount);
+            $this->updateTransactionStatus($transactionId, 'completed');
+            
+            $this->pdo->commit();
+            return ['success' => true, 'transaction_id' => $transactionId];
+            
     }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function setId($id) {
-        $this->id = $id;
-    }
-
-    public function getAmount() {
-        return $this->amount;
-    }
-
-    public function setAmount($amount) {
-        $this->amount = $amount;
-    }
-
-    public function getTransactionType() {
-        return $this->transaction_type;
-    }
-
-    public function setTransactionType($transaction_type) {
-        $this->transaction_type = $transaction_type;
-    }
-
-    public function getStatus() {
-        return $this->status;
-    }
-
-    public function setStatus($status) {
-        $this->status = $status;
-    }
-
-    public function getDate() {
-        return $this->date;
-    }
-
-    public function setDate($date) {
-        $this->date = $date;
-    }
-
-    public function getUser() {
-        return $this->user;
-    }
-
-    public function setUser($user) {
-        $this->user = $user;
-    }
-
-    public function getCrypto() {
-        return $this->crypto;
-    }
-
-    public function setCrypto($crypto) {
-        $this->crypto = $crypto;
-    }
-
-    public function getUserId() {
-        return $this->user_id;
-    }
-
-    public function setUserId($user_id) {
-        $this->user_id = $user_id;
-    }
-
-    public function getCryptoId() {
-        return $this->crypto_id;
-    }
-
-    public function setCryptoId($crypto_id) {
-        $this->crypto_id = $crypto_id;
+    
+    public function sellCrypto($userId, $cryptoId, $amount) {
+       
     }
 }
 ?>

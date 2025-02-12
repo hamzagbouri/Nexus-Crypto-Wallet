@@ -1,1 +1,2 @@
 app/Model/Database.php
+vendor/phpmailer

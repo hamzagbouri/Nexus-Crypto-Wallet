@@ -1,11 +1,7 @@
--- Create Database
-CREATE DATABASE nexus;
-\c nexus;
-
--- Users Table
 CREATE TABLE users (
                        id_user SERIAL PRIMARY KEY,
-                       full_name VARCHAR(255),
+                       nom VARCHAR(255),
+					   prenom Varchar(255),
                        date_naissance VARCHAR(255),
                        nexus_id VARCHAR(255) UNIQUE,
                        email VARCHAR(255) UNIQUE,
@@ -13,13 +9,9 @@ CREATE TABLE users (
                        usdt_balance FLOAT DEFAULT 0,
                        date_insertion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Crypto Table
-
--- Wallet Table (One Wallet per User)
 CREATE TABLE wallet (
                         id_wallet SERIAL PRIMARY KEY,
-                        id_user INT UNIQUE,
+                        id_user INT ,
                         date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
@@ -74,3 +66,4 @@ CREATE TABLE notification (
                               date_insertion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
 );
+drop table users

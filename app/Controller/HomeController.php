@@ -9,21 +9,24 @@ class HomeController extends Controller
 {
     public function index(){
 
+     
         $this->view('index');
     }
-    public function login()
+    public  function login()
     {
-        echo 'login';
+      
         $this->view('pages/login');
     }
     public function register()
     {
-        echo 'register';
+       
         $this->view('pages/signup');
     }
+    
     public function top10()
     {
 
+        
         $this->view('pages/top10');
     }
     public function watchList()
@@ -64,7 +67,12 @@ class HomeController extends Controller
 
         // Passer les données à la vue
         $this->view('pages/watchList', $cryptoData);
+      
+        $this->view('pages/watchList');
     }
 
+    public function verify(){
+        $this->view('pages/verify_code');
+    }
 
 }
