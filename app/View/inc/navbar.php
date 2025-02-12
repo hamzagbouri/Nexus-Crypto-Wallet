@@ -27,7 +27,7 @@
     </div>
 </header>
 
-<div class="wallet-container card">
+<!-- <div class="wallet-container card">
     <div class="wallet-header">
         <h3>My Wallet</h3>
     </div>
@@ -65,6 +65,40 @@
             <button class="view-button">View</button>
         </div>
     </div>
-</div>
+</div> -->
+<div id="user" data-user-id="{{ user.id }}">
+<div class="wallet-container card">
+    <div class="wallet-header">
+        <h3>My Wallet</h3>
+    </div>
 
+    <div class="user-info">
+        <span class="username">👤 User: <strong>John Doe</strong></span>
+    </div>
+
+    <div class="balance-section">
+        <div class="crypto-balance">
+            <span>💰 Balance:</span>
+            <span class="usdt-balance">500 USDT</span>
+        </div>
+        <button class="send-button">Send</button>
+    </div>
+
+    <div class="crypto-list">
+        <h4>Other Cryptos</h4>
+        <!-- Les cryptos seront injectées dynamiquement ici via JavaScript -->
+    </div>
+
+    <!-- Section pour le graphique -->
+    <div class="chart-section">
+        <h4>Portfolio Statistics</h4>
+        <canvas id="portfolioChart" width="400" height="400"></canvas>
+    </div>
+</div>
+</div>
+<script>
+        const userId = {{ user.id }}; 
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="../js/wallet.js"></script>
