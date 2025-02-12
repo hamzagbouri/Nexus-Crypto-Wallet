@@ -6,6 +6,8 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/signup.css">
+    <link rel="stylesheet" href="../css/wallet.css">
+
 </head>
 <body>
 <?php require_once __DIR__. '/../inc/navbar.php'?>
@@ -47,6 +49,6 @@
             </div>
         </div>
     </div>
-
+<script src="../js/wallet.js"></script>
 </body>
 </html>

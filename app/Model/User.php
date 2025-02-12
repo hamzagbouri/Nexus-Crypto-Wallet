@@ -6,7 +6,7 @@ use PDOException;
 class User {
     private $id;
     private $nom;
-    private$prenom;
+    private $prenom;
     private $date_naissance;
     private $nexus_id;
     private $email;
