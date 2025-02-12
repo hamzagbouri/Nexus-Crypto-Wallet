@@ -9,7 +9,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center bg-[#0d102c] font-['Poppins']">
     <div class="w-full max-w-md p-8">
-        <form action="/nexus-crypto-wallet/Auth/verify_code" method="POST" class="space-y-6">
+        <form action="/nexus-crypto-wallet/Auth/verify_code/<?= $data ?>" method="POST" class="space-y-6">
             <div class="relative">
                 <input 
                     type="text" 
