@@ -21,7 +21,7 @@ class Database {
         if (self::$instance === null) {
             $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=nexus';
             $username = $username ?? 'postgres';
-            $password = $password ?? 'shraika';
+            $password = $password ?? 'farabi2005';
             self::$instance = new Database($dsn, $username, $password);
         }
         return self::$instance;

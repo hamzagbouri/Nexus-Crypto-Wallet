@@ -12,7 +12,7 @@
   </head>
   <body>
 
-    <?php require_once __DIR__. './../inc/navbar.php'?>
+    <?php require_once __DIR__. '/../inc/navbar.php'?>
 
 
     <div class="watchlist-container bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-5xl mx-auto">
