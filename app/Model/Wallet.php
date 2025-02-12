@@ -11,6 +11,9 @@ class Wallet {
         $this->user = $user;
         $this->balances = $balances; // Format: ['BTC' => 0.5, 'ETH' => 2.0]
     }
+    public static function getWallet($id_user) {
+        $wallet = new Wallet($id_user);
+    }
 
     public function getBalance($cryptoSymbol) {
         return $this->balances[$cryptoSymbol] ?? 0; // Return 0 if crypto not found

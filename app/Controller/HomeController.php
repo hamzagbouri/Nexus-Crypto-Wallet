@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\core\Controller;
 use App\Model\Session;
+use App\Model\Wallet;
 use App\Model\Watchlist;
 
 class HomeController extends Controller
@@ -32,9 +33,10 @@ class HomeController extends Controller
     }
     public function watchList()
     {
+        Session::ActiverSession();
+        $user = unserialize($_SESSION['userData']);
 
-        // Récupérer les cryptos enregistrées dans la watchlist
-        $watchlist = Watchlist::getAll(1); // Remplace 1 par l'ID de l'utilisateur dynamique
+        $watchlist = Watchlist::getAll($user->getId()); // Remplace 1 par l'ID de l'utilisateur dynamique
 
         // Récupérer les informations des cryptos via l'API
         $cryptoData = [];
@@ -74,11 +76,21 @@ class HomeController extends Controller
     }
 
     public function verify($user){
+        Session::ActiverSession();
+print_r($_SESSION);
         $this->view('pages/verify_code',$user);
     }
     public function transaction()
     {
         $this->view('pages/transaction');
+    }
+    public function wallet() {
+        Session::ActiverSession();
+        $user = unserialize($_SESSION['userData']);
+
+        $user_id = $user->getId();
+        $data['balance'] = $user->getUsdtBalance();
+        $this->view('pages/wallet',$data);
     }
 
 }
