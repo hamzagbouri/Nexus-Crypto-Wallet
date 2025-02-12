@@ -3,7 +3,7 @@
         'name' => 'hamza/ncm',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '016f392c9298fc1a2269ddde2485d393880e01e5',
+        'reference' => '44eeac0a3459940ba4507e50e67bc49cde8a0932',
         'type' => 'no',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'hamza/ncm' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '016f392c9298fc1a2269ddde2485d393880e01e5',
+            'reference' => '44eeac0a3459940ba4507e50e67bc49cde8a0932',
             'type' => 'no',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

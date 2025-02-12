@@ -20,9 +20,9 @@ class Database {
 
     public static function getInstance($dsn = null, $username = null, $password = null) {
         if (self::$instance === null) {
-            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=Nexus';
+            $dsn = $dsn ?? 'pgsql:host=localhost;port=5432;dbname=nexus';
             $username = $username ?? 'postgres';
-            $password = $password ?? 'kaoutar';
+            $password = $password ?? 'shraika';
             self::$instance = new Database($dsn, $username, $password);
         }
         return self::$instance;
