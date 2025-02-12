@@ -11,11 +11,12 @@ class AuthController extends Controller{
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $email = trim(htmlspecialchars($_POST['username']));
             $password = trim(htmlspecialchars($_POST['password']));
-             if(user::login($email,$password)){
+            $user = User::login($email, $password);
+             if($user){
                 $code= str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
                 $Mail= new Mail();
                 $Mail->sendVerificationCode($email,$code);
-               header('location: /Nexus-crypto-wallet/Home/verify');
+               header("location: /Nexus-crypto-wallet/Home/verify/$user");
              }else{
                 session::ActiverSession();
                 $_SESSION['error']="mot de pass ou mail invalide";
@@ -47,22 +48,27 @@ class AuthController extends Controller{
   
       }
 
-      public function verify_code(){
+      public function verify_code($user){
+          session::ActiverSession();
         if($_SERVER['REQUEST_METHOD']=='POST'){
             $code=$_POST['code'];
-            session::ActiverSession();
+
              if($code == $_SESSION['code']){
-               
+                Session::validateSession($user);
+               unset($_SESSION['code']);
                 header('location: /Nexus-crypto-wallet/Home/watchList');
                 exit;
              }else{
-                echo "code invalide";
+                 $_SESSION['error']="Invalid Code";
+                 header('location: /Nexus-crypto-wallet/Home/verify');
+
              }
         }
+
       }
       
       public function logout() {
           User::logout();
-          header('Location: /Youdemy-mvc/home/login');
+          header('Location: /nexus-crypto-wallet/home/login');
       }
 }

@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="../css/wallet.css">
 </head>
 <body>
-<?php require_once __DIR__. '/../inc/navbar.php'?>
+<?php require_once __DIR__. '/../inc/navbar.php';
+    if($logged)
+    {
+        header('Location: /nexus-crypto-wallet/');
+    }
+?>
     <div class="login-page">
       <div class="login-container">
           <div class="login-form">
@@ -38,8 +43,6 @@
 
 <?php
 
-use App\Model\Session;
-Session::ActiverSession();
 if (isset($_SESSION['success'])) {
     $Message = $_SESSION['success'];
     echo "

@@ -47,12 +47,12 @@
                     <?= $crypto['change_24h'] ?>%
                 </td>
                 <td class="p-3 flex justify-center gap-2">
-                    <button class="buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                            data-action="Buy" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $price ?>">
+                    <button class="btn buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                            data-action="Buy" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $crypto['price'] ?>">
                         Buy
                     </button>
-                    <button class="sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                            data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $price ?>">
+                    <button class="btn sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $crypto['price'] ?>">
                         Sell
                     </button>
                     <a href="/nexus-crypto-wallet/watchlist/supprimer/<?=$crypto['slug']?>" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</a>
@@ -95,5 +95,9 @@
 
     <script src="../js/wallet.js"></script>
     <script src="../js/watchList.js"></script>
+    <script>
+
+   
+    </script>
   </body>
 </html>

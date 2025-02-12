@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\core\Controller;
+use App\Model\Session;
 use App\Model\Watchlist;
 
 class HomeController extends Controller
@@ -31,6 +32,7 @@ class HomeController extends Controller
     }
     public function watchList()
     {
+
         // Récupérer les cryptos enregistrées dans la watchlist
         $watchlist = Watchlist::getAll(1); // Remplace 1 par l'ID de l'utilisateur dynamique
 
@@ -71,8 +73,12 @@ class HomeController extends Controller
         $this->view('pages/watchList');
     }
 
-    public function verify(){
-        $this->view('pages/verify_code');
+    public function verify($user){
+        $this->view('pages/verify_code',$user);
+    }
+    public function transaction()
+    {
+        $this->view('pages/transaction');
     }
 
 }

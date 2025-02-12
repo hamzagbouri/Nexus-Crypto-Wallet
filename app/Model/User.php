@@ -130,9 +130,10 @@ class User {
        $result=$stmt->fetch(PDO::FETCH_ASSOC);
         if($result){
             if (password_verify($password, $result['password'])) {
-                Session::validateSession($result);
 
-                return true; // Connexion réussie
+//                Session::validateSession($result);
+
+                return $result['nexus_id']; // Connexion réussie
             }else {return false;}
         }else {return false;}
 
@@ -143,7 +144,8 @@ class User {
     }
 
     public static function  logout(){
-
+        Session::ActiverSession();
+        unset($_SESSION['userData']);
     }
 
     public function getBalance() {
