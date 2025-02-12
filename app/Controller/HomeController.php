@@ -20,6 +20,7 @@ class HomeController extends Controller
        
         $this->view('pages/signup');
     }
+    
     public function top10()
     {
         
@@ -29,6 +30,9 @@ class HomeController extends Controller
     {
       
         $this->view('pages/watchList');
+    }
+    public function verify(){
+        $this->view('pages/verify_code');
     }
 
 }

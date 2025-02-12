@@ -1,6 +1,8 @@
 <?php
 namespace App\Model;
 use PDO;
+use PDOException;
+
 class User {
     private $id;
     private $nom;
@@ -98,8 +100,46 @@ class User {
         return "Utilisateur enregistré avec succès!";
     }
 
-    public static  function login() {
-        // Implementation
+    public static function getUserByEmail($email){
+       
+        $db=Database::getInstance()->getConnection();
+        try{
+          $stmt=$db->prepare("select * From users where email=:email");
+          $stmt->bindParam(':email', $email);
+          $result=$stmt->execute();
+          if($result){
+             return new user($result['id'],$result['nom'],$result['prenom'],$result['date_naissance'],$result['email'],$result['password'],$result['usdt_balance']);
+          }
+              return null;
+
+        }catch(PDOException $e){
+            die("err de req");
+        }
+    }
+
+    public function  updateVerificationCode($email, $code){
+         
+    }
+
+    public static  function login($email,$password) {
+       $db=Database::getInstance()->getConnection();
+       try{
+        $stmt = $db->prepare("SELECT * FROM users WHERE email =:email"); 
+        $stmt->bindParam(':email', $email);
+       $stmt->execute();
+       $result=$stmt->fetch(PDO::FETCH_ASSOC);
+        if($result){
+            if (password_verify($password, $result['password'])) {
+                Session::validateSession($result);
+
+                return true; // Connexion réussie
+            }else {return false;}
+        }else {return false;}
+
+       }catch(PDOException $e){
+           die('err sql');
+       } 
+
     }
 
     public static function  logout(){
