@@ -17,20 +17,35 @@
                 const totalSupply = coin.total_supply ? coin.total_supply.toLocaleString() : "N/A";
                 const priceClass = change24h >= 0 ? "up" : "down";
 
-                const row = `
-          <tr>
-            <td>${coin.cmc_rank}</td>
-            <td>${coin.name} (${coin.symbol})</td>
-            <td class="${priceClass}">$${price}</td>
-            <td class="${priceClass}">${change24h}%</td>
-            <td><img src="../img/chart-placeholder.png" alt="${coin.name} Chart" /></td>
-            <td>
-              <i class="fa fa-star"></i>
-              <i class="fa fa-info-circle"></i>
-            </td>
-          </tr>
-        `;
-                tbody.innerHTML += row;
+                fetch(`http://localhost/Nexus-crypto-wallet/watchlist/check/${coin.slug}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        let watchlistButton = "";
+
+                        if (!data) { // If data is false, show the button
+                            watchlistButton = `
+                            <a href="/nexus-crypto-wallet/watchlist/add/${coin.slug}"  
+                               class="bg-[#3d51f2] px-2 py-2 rounded-xl cursor-pointer"> 
+                               Ajouter au watchlist 
+                            </a>`;
+                        }
+
+                        const row = `
+                        <tr>
+                            <td>${coin.cmc_rank}</td>
+                            <td>${coin.name} (${coin.symbol})</td>
+                            <td class="${priceClass}">$${price}</td>
+                            <td class="${priceClass}">${change24h}%</td>
+                            <td><img src="../img/chart-placeholder.png" alt="${coin.name} Chart" /></td>
+                            <td>${watchlistButton}</td>
+                        </tr>
+                    `;
+
+                        tbody.innerHTML += row;
+                    })
+                    .catch(error => console.error("Error checking watchlist status:", error));
             });
         })
         .catch(error => console.error("Error fetching crypto data:", error));
+

@@ -9,8 +9,10 @@
   <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./css/wallet.css" />
     <link rel="stylesheet" href="./css/top10.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <script
+
+    <script
     src="https://kit.fontawesome.com/aa7454d09f.js"
     crossorigin="anonymous"></script>
 </head>
