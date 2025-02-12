@@ -9,7 +9,7 @@ public function get(){
     header("Access-Control-Allow-Origin: *");
     header("Content-Type: application/json");
 
-    $apiKey = "463d4c26-b9c5-4882-8541-7aae66f65764";
+    $apiKey = "f3aefe83-2ac2-4a53-86e8-dd094b3062a5";
     $url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=USD&limit=10";
 
     $ch = curl_init();
