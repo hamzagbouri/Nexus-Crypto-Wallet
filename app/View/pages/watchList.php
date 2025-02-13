@@ -48,7 +48,7 @@
                 </td>
                 <td class="p-3 flex justify-center gap-2">
                     
-                <button class="btn buy-btn"
+                <button class="btn buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                     data-action="Buy" 
                     data-name="<?= htmlspecialchars($crypto['name']) ?>" 
                     data-price="<?= $crypto['price'] ?>"
@@ -59,7 +59,7 @@
                     <button class="btn sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                             data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>"
                             data-price="<?= $crypto['price'] ?>
-                                                "data-slug="<?=$crypto['slug']?>">
+                            "data-slug="<?=$crypto['slug']?>">
                         Sell
                     </button>
                     <a href="/nexus-crypto-wallet/watchlist/supprimer/<?=$crypto['slug']?>" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</a>
