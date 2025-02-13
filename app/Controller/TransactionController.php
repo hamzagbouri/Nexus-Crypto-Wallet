@@ -55,7 +55,7 @@ class TransactionController {
                 $this->transactionModel->updateOrInsertWalletCrypto($walletId, $cryptoName, $amount);
 
                 $_SESSION['transaction']['success'] = "Successfully bought $amount $cryptoName for $costInUsdt USDT";
-            } catch (\Exception $e) {
+            } catch (PDOException $e) {
                 $_SESSION['transaction']['error'] = "Failed to buy: " . $e->getMessage();
             }
         }
@@ -83,7 +83,7 @@ class TransactionController {
                 $this->transactionModel->updateOrInsertWalletCrypto($walletId, $cryptoName, -$amount);
 
                 $_SESSION['transaction']['success'] = "Successfully sold $amount $cryptoName for $costInUsdt USDT";
-            } catch (\Exception $e) {
+            } catch (PDOException $e) {
                 $_SESSION['transaction']['error'] = "Failed to sell: " . $e->getMessage();
             }
         }
