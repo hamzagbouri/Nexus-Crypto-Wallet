@@ -17,7 +17,7 @@ let currentTrade = {
 document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function() {
         currentTrade.action = this.dataset.action;
-        currentTrade.cryptoName = this.dataset.name;
+        currentTrade.cryptoName = this.dataset.slug;
         currentTrade.price = parseFloat(this.dataset.price.replace(/,/g, ''));
         currentTrade.cryptoId = this.dataset.cryptoId;
 

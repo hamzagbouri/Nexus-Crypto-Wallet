@@ -51,12 +51,15 @@
                 <button class="btn buy-btn"
                     data-action="Buy" 
                     data-name="<?= htmlspecialchars($crypto['name']) ?>" 
-                    data-price="<?= $crypto['price'] ?>">
+                    data-price="<?= $crypto['price'] ?>"
+                    data-slug="<?=$crypto['slug']?>">
                         Buy
                     </button>
 
                     <button class="btn sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                            data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $crypto['price'] ?>">
+                            data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>"
+                            data-price="<?= $crypto['price'] ?>
+                                                "data-slug="<?=$crypto['slug']?>">
                         Sell
                     </button>
                     <a href="/nexus-crypto-wallet/watchlist/supprimer/<?=$crypto['slug']?>" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</a>
@@ -107,9 +110,26 @@
 
     <script src="../js/wallet.js"></script>
     <script src="../js/watchList.js"></script>
-    <script>
+    <?php
+    
+    if (isset($_SESSION['transaction'])): ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php if (isset($_SESSION['transaction']['success'])): ?>
+        <script>
+            window.onload = function() {
+                Swal.fire('Success', '<?= htmlspecialchars($_SESSION['transaction']['success']) ?>', 'success');
+            }
+        </script>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['transaction']['error'])): ?>
+        <script>
+            window.onload = function() {
+                Swal.fire('Error', '<?= htmlspecialchars($_SESSION['transaction']['error']) ?>', 'error');
+            }
+        </script>
+    <?php endif; ?>
+    <?php unset($_SESSION['transaction']); ?>
+<?php endif; ?>
 
-   
-    </script>
   </body>
 </html>

@@ -33,7 +33,7 @@ CREATE TABLE transaction (
                              transaction_date DATE,
                              id_user INT,
                              id_receiver INT,
-                             id_crypto varchar(255) unique ,
+                             id_crypto varchar(255)  ,
                              prix_crypto FLOAT,
                              date_transaction TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                              FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
