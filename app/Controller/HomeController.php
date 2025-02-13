@@ -35,7 +35,7 @@ class HomeController extends Controller
     {
         Session::ActiverSession();
         $user = unserialize($_SESSION['userData']);
-
+     
         $watchlist = Watchlist::getAll($user->getId()); // Remplace 1 par l'ID de l'utilisateur dynamique
 
         // Récupérer les informations des cryptos via l'API

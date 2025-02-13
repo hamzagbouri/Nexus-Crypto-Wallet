@@ -47,10 +47,14 @@
                     <?= $crypto['change_24h'] ?>%
                 </td>
                 <td class="p-3 flex justify-center gap-2">
-                    <button class="btn buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                            data-action="Buy" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $crypto['price'] ?>">
+                    
+                <button class="btn buy-btn"
+                    data-action="Buy" 
+                    data-name="<?= htmlspecialchars($crypto['name']) ?>" 
+                    data-price="<?= $crypto['price'] ?>">
                         Buy
                     </button>
+
                     <button class="btn sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                             data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $crypto['price'] ?>">
                         Sell
@@ -69,29 +73,37 @@
         </table>
     </div>
     <!-- Modal Background -->
-    <div id="tradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-        <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96">
-            <h2 id="modalTitle" class="text-xl font-semibold mb-4"></h2>
-
+    <!-- Trade Modal -->
+<div id="tradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96">
+        <h2 id="modalTitle" class="text-xl font-semibold mb-4"></h2>
+        <form action="/nexus-crypto-wallet/Transaction/buyCrypto" method="POST">
             <p class="mb-2">Price: <span id="cryptoPrice" class="font-bold"></span> USDT</p>
             <p id="usdtBalanceText" class="mb-2 hidden">Your Balance: <span id="usdtBalance" class="font-bold"></span> USDT</p>
 
+            <!-- Hidden Inputs -->
+            <input type="hidden" id="action" name="action" value="">
+            <input type="hidden" id="cryptoName" name="cryptoName" value="">  <!-- Using only cryptoName -->
+            <input type="hidden" id="cryptoPriceHidden" name="price" value="">
+
             <div class="mb-4">
                 <label for="cryptoAmount" class="block text-sm">Amount:</label>
-                <input type="number" id="cryptoAmount" class="w-full p-2 text-black rounded" placeholder="Enter amount">
+                <input name="amount" type="number" id="cryptoAmount" class="w-full p-2 text-black rounded" placeholder="Enter amount" step="any">
             </div>
 
             <div class="mb-4">
                 <label for="usdtAmount" class="block text-sm">USDT:</label>
-                <input type="number" id="usdtAmount" class="w-full p-2 text-black rounded" placeholder="Enter USDT">
+                <input name="usdtAmount" type="number" id="usdtAmount" class="w-full p-2 text-black rounded" placeholder="Enter USDT" step="any">
             </div>
 
             <div class="flex justify-end gap-3">
-                <button onclick="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                <button id="confirmTrade" class="px-4 py-2 bg-green-500 text-white rounded">Confirm</button>
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" id="confirmTrade" class="px-4 py-2 bg-green-500 text-white rounded">Confirm</button>
             </div>
-        </div>
+        </form>
     </div>
+</div>
+
 
     <script src="../js/wallet.js"></script>
     <script src="../js/watchList.js"></script>
