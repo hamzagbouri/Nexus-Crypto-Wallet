@@ -11,7 +11,8 @@ class HomeController extends Controller
 {
     public function index(){
 
-     
+
+
         $this->view('index');
     }
     public  function login()
@@ -35,7 +36,9 @@ class HomeController extends Controller
     {
         Session::ActiverSession();
         $user = unserialize($_SESSION['userData']);
-
+        echo $user->getUsdtBalance();
+        $wallet = unserialize($_SESSION['wallet']);
+        $cryptosWallet = $wallet->getAllBalances();
         $watchlist = Watchlist::getAll($user->getId()); // Remplace 1 par l'ID de l'utilisateur dynamique
 
         // Récupérer les informations des cryptos via l'API
@@ -43,10 +46,8 @@ class HomeController extends Controller
         if(!empty($watchlist))
         {
         foreach ($watchlist->getCryptos() as $crypto) {
-
             $cryptoInfo = file_get_contents("http://localhost/Nexus-crypto-wallet/api/getcrypto/$crypto");
             $decodedData = json_decode($cryptoInfo, true);
-
             if ($decodedData) {
                 $price = $decodedData['description'];
                 // Extract price and change percentage using regex
@@ -57,22 +58,19 @@ class HomeController extends Controller
                     $cryptoPrice = "N/A";
                     $change24h = "N/A";
                 }
-
                 // Add slug and extracted values
                 $decodedData['slug'] = $crypto;
                 $decodedData['price'] = $cryptoPrice;
                 $decodedData['change_24h'] = $change24h;
-
+                $decodedData['cryptosWallet'] = $cryptosWallet;
                 $cryptoData[] = $decodedData;
             }
-
         }
         }
 
         // Passer les données à la vue
         $this->view('pages/watchList', $cryptoData);
       
-        $this->view('pages/watchList');
     }
 
     public function verify($user){
@@ -87,9 +85,13 @@ print_r($_SESSION);
     public function wallet() {
         Session::ActiverSession();
         $user = unserialize($_SESSION['userData']);
-
         $user_id = $user->getId();
+        $data['user'] = $user;
         $data['balance'] = $user->getUsdtBalance();
+        $data['cryptos'] = Wallet::getWalletForUser($user_id);
+        if(!isset($_SESSION['wallet'])){
+            $_SESSION['wallet'] =$data['cryptos'];
+        }
         $this->view('pages/wallet',$data);
     }
 

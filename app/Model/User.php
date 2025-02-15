@@ -106,7 +106,8 @@ class User {
 
         // Exécuter la requête
         $stmt->execute();
-
+        $userid = $db->lastInsertId();
+        Wallet::create($userid);
         // Retourner un message de succès
         return "Utilisateur enregistré avec succès!";
     }
@@ -115,11 +116,12 @@ class User {
        
         $db=Database::getInstance()->getConnection();
         try{
-          $stmt=$db->prepare("select * From users where email=:email");
+          $stmt=$db->prepare("select * From users where email=:email or nexus_id=:email");
           $stmt->bindParam(':email', $email);
-          $result=$stmt->execute();
+          $stmt->execute();
+          $result=$stmt->fetch(PDO::FETCH_ASSOC);
           if($result){
-             return new user($result['id'],$result['nom'],$result['prenom'],$result['date_naissance'],$result['email'],$result['password'],$result['usdt_balance']);
+             return new user($result['id_user'],$result['nom'],$result['prenom'],$result['date_naissance'],$result['nexus_id'],$result['email'],$result['password'],$result['usdt_balance']);
           }
               return null;
 
@@ -157,6 +159,7 @@ class User {
     public static function  logout(){
         Session::ActiverSession();
         unset($_SESSION['userData']);
+        unset($_SESSION['wallet']);
     }
 
     public function getBalance() {
@@ -208,8 +211,13 @@ class User {
         return $this->usdt_balance;
     }
 
-    public function setUsdtBalance($usdt_balance) {
-        $this->usdt_balance = $usdt_balance;
+    public function setUsdtBalance($usdt_balancee) {
+        $this->usdt_balance = $usdt_balancee;
+        Session::ActiverSession();
+        if(isset($_SESSION['userData'])){
+            unset($_SESSION['userData']);
+        }
+        $_SESSION['userData'] = serialize($this);
     }
 }
 ?>

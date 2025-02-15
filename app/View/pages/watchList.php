@@ -39,26 +39,48 @@
             $price = isset($matches[1]) ? floatval(str_replace(',', '', $matches[1])) : 0;
             $change_24h = isset($matches[3]) ? ($matches[2] === 'down' ? -floatval($matches[3]) : floatval($matches[3])) : 0;
             ?>
-            <tr class="border-b border-gray-700">
-                <td class="p-3"><?= $index + 1 ?></td>
-                <td class="p-3"><?= htmlspecialchars($crypto['name']) ?> (<?= strtoupper(htmlspecialchars($crypto['symbol'])) ?>)</td>
-                <td class="p-3">$<?= $crypto['price'] ?></td>
-                <td class="p-3 <?= $crypto['change_24h'] >= 0 ? 'text-green-500' : 'text-red-500' ?>">
-                    <?= $crypto['change_24h'] ?>%
-                </td>
-                <td class="p-3 flex justify-center gap-2">
-                    <button class="buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                            data-action="Buy" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $price ?>">
-                        Buy
-                    </button>
-                    <button class="sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                            data-action="Sell" data-name="<?= htmlspecialchars($crypto['name']) ?>" data-price="<?= $price ?>">
-                        Sell
-                    </button>
-                    <a href="/nexus-crypto-wallet/watchlist/supprimer/<?=$crypto['slug']?>" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Remove</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
+                    <tr class="border-b border-gray-700">
+                        <td class="p-3"><?= $index + 1 ?></td>
+                        <td class="p-3">
+                            <?= htmlspecialchars($crypto['name']) ?> (<?= strtoupper(htmlspecialchars($crypto['symbol'])) ?>)
+                        </td>
+                        <td class="p-3">$<?= htmlspecialchars($crypto['price']) ?></td>
+                        <td class="p-3 <?= $crypto['change_24h'] >= 0 ? 'text-green-500' : 'text-red-500' ?>">
+                            <?= htmlspecialchars($crypto['change_24h']) ?>%
+                        </td>
+                        <td class="p-3 flex justify-center gap-2">
+                            <?php
+                            // Vérifier si l'utilisateur possède cet actif
+                            $userCryptos = $crypto['cryptosWallet'];
+                            $cryptoAmount = isset($userCryptos[$crypto['slug']]) ? $userCryptos[$crypto['slug']] : 0;
+                            ?>
+
+                            <button class="btn buy-btn px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                                    data-action="Buy"
+                                    data-name="<?= htmlspecialchars($crypto['name']) ?>"
+                                    data-slug="<?= htmlspecialchars($crypto['slug']) ?>"
+                                    data-price="<?= number_format((float)str_replace(',', '', $crypto['price']), 2, '.', ''); ?>">
+                                Buy
+                            </button>
+
+                            <button class="btn sell-btn px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                                    data-action="Sell"
+                                    data-name="<?= htmlspecialchars($crypto['name']) ?>"
+                                    data-slug="<?= htmlspecialchars($crypto['slug']) ?>"
+                                    data-price="<?= number_format((float)str_replace(',', '', $crypto['price']), 2, '.', ''); ?>"
+                                    data-amount="<?= $cryptoAmount ?>">
+                                Sell (<?= number_format($cryptoAmount, 2) ?>)
+                            </button>
+
+
+                            <a href="/nexus-crypto-wallet/watchlist/supprimer/<?= htmlspecialchars($crypto['slug']) ?>"
+                               class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                Remove
+                            </a>
+                        </td>
+                    </tr>
+
+                <?php endforeach; ?>
 
             <?php else: ?>
                 <tr>
@@ -72,28 +94,31 @@
     <div id="tradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
         <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-96">
             <h2 id="modalTitle" class="text-xl font-semibold mb-4"></h2>
-
+            <form action="/nexus-crypto-wallet/crypto/transation" method="post">
+                <input type="hidden" id="crypto" name="crypto" value="">
+                <input type="hidden" id="cPrice" name="cPrice" value="<?= number_format((float)str_replace(',', '', $crypto['price']), 2, '.', ''); ?>">
+            <input type="hidden" id="action" name="action" value="">
             <p class="mb-2">Price: <span id="cryptoPrice" class="font-bold"></span> USDT</p>
-            <p id="usdtBalanceText" class="mb-2 hidden">Your Balance: <span id="usdtBalance" class="font-bold"></span> USDT</p>
+            <p data-amount="<?=$cryptoAmount?>" id="usdtBalanceText" class="mb-2 hidden">Your Balance: <span id="usdtBalance" class="font-bold"></span>  <?=$cryptoAmount?> Crypto</p>
 
             <div class="mb-4">
                 <label for="cryptoAmount" class="block text-sm">Amount:</label>
-                <input type="number" id="cryptoAmount" class="w-full p-2 text-black rounded" placeholder="Enter amount">
+                <input type="number" id="cryptoAmount" step="any" name="cryptoAmount"   class="w-full p-2 text-black rounded" placeholder="Enter amount">
             </div>
 
             <div class="mb-4">
                 <label for="usdtAmount" class="block text-sm">USDT:</label>
-                <input type="number" id="usdtAmount" class="w-full p-2 text-black rounded" placeholder="Enter USDT">
+                <input type="number" id="usdtAmount" step="any" name="usdtAmount" class="w-full p-2 text-black rounded" placeholder="Enter USDT">
             </div>
 
             <div class="flex justify-end gap-3">
-                <button onclick="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
-                <button id="confirmTrade" class="px-4 py-2 bg-green-500 text-white rounded">Confirm</button>
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</button>
+                <button type="submit" id="confirmTrade"  class="px-4 py-2 bg-green-500 text-white rounded">Confirm</button>
             </div>
+            </form>
         </div>
     </div>
 
-    <script src="../js/wallet.js"></script>
     <script src="../js/watchList.js"></script>
   </body>
 </html>

@@ -5,6 +5,7 @@ use App\core\Controller;
 use App\Model\User;
 use App\Model\Session;
 use App\Model\Mail;
+use App\Model\Wallet;
 
 class AuthController extends Controller{
     public function login() {
@@ -56,6 +57,8 @@ class AuthController extends Controller{
              if($code == $_SESSION['code']){
                  $userObjet = User::getById($user);
                 Session::validateSession($userObjet);
+                 $w = Wallet::getWalletForUser($userObjet->getId());
+                 $_SESSION['wallet'] = serialize($w);
                unset($_SESSION['code']);
                 header('location: /Nexus-crypto-wallet/Home/watchList');
                 exit;

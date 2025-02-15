@@ -25,7 +25,8 @@
   <section class="hero gridSection">
     <div class="sectionDesc">
       <h1 class="headline">
-        Most popular way to trade <span class="cryptoText">CRYPTO</span>.
+        Most popular way to trade <span class="cryptoText">CRYPTOO</span>.
+          <?php echo "aaa";?>
       </h1>
       <p class="sub-headline">
         You can see a record of all your transactions anytime you want and

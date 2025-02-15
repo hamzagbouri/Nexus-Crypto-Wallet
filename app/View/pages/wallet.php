@@ -13,206 +13,155 @@
 <body class="bg-gray-900 text-white">
 <!-- Header -->
 <?php require_once __DIR__. '/../inc/navbar.php'?>
+
 <!-- Wallet Section -->
 <section class="container mx-auto px-4 py-8">
     <div class="flex flex-col md:flex-row gap-6 bg-gray-800 rounded-lg shadow-lg p-6">
         <!-- Left Section: Chart -->
-        <div class="w-full md:w-1/3 bg-gray-700 rounded-lg p-4"> <!-- Reduced width from 1/2 to 1/3 -->
+        <div class="w-full md:w-1/3 bg-gray-700 rounded-lg p-4">
             <h3 class="text-xl font-bold text-center mb-4">Wallet Statistics</h3>
-            <canvas id="walletChart" class="max-w-full h-auto"></canvas> <!-- Responsive sizing -->
+            <canvas id="walletChart" class="max-w-full h-auto"></canvas>
         </div>
+
         <!-- Right Section: Balance and Coins -->
-        <div class="w-full md:w-2/3"> <!-- Increased width from 1/2 to 2/3 -->
+        <div class="w-full md:w-2/3">
             <div class="mb-4">
                 <h3 class="text-2xl font-bold">My Wallet</h3>
             </div>
             <div class="mb-4">
-                <span class="text-lg">👤 User: <strong>John Doe</strong></span>
+                <span class="text-lg">👤 User: <strong><?=$data['user']->getNom()?> <?=$data['user']->getPrenom()?></strong></span>
             </div>
             <div class="flex justify-between items-center mb-6">
                 <div class="text-lg">
                     <span>💰 Balance:</span>
                     <span class="font-bold text-green-500"><?=$data['balance']?> USDT</span>
                 </div>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Send
+                <button id="sendUsdtBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                    Send USDT
                 </button>
             </div>
+
             <div>
                 <h4 class="text-xl font-bold mb-4">Other Cryptos</h4>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center bg-gray-700 rounded-lg p-4">
-                        <span class="text-lg">Bitcoin (BTC):</span>
-                        <div class="flex items-center space-x-2">
-                            <span>0.0123 BTC</span>
-                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded">
-                                Send
-                            </button>
-                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded">
-                                Buy
-                            </button>
-                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">
-                                Sell
-                            </button>
-                        </div>
+                <?php if(isset($data['cryptos'])): ?>
+                    <div class="space-y-4">
+                        <?php $wallets = $data['cryptos'];?>
+                        <?php $cryptos = $wallets->getAllBalances();?>
+                        <?php foreach ($cryptos as $id_crypto => $amount): ?>
+                            <div class="flex justify-between items-center bg-gray-700 rounded-lg p-4">
+                                <span class="text-lg"><?= $id_crypto?>:</span>
+                                <div class="flex items-center space-x-2">
+                                    <span><?=$amount?></span>
+                                    <button class="sendCryptoBtn bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded" data-crypto="<?= $id_crypto ?>" data-amount="<?= $amount ?>">
+                                        Send
+                                    </button>
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
+                <?php else:?>
                     <div class="flex justify-between items-center bg-gray-700 rounded-lg p-4">
-                        <span class="text-lg">Ethereum (ETH):</span>
-                        <div class="flex items-center space-x-2">
-                            <span>1.254 ETH</span>
-                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded">
-                                Send
-                            </button>
-                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded">
-                                Buy
-                            </button>
-                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">
-                                Sell
-                            </button>
-                        </div>
+                        <p>You don't have other cryptos</p>
                     </div>
-                    <div class="flex justify-between items-center bg-gray-700 rounded-lg p-4">
-                        <span class="text-lg">Solana (SOL):</span>
-                        <div class="flex items-center space-x-2">
-                            <span>15.62 SOL</span>
-                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded">
-                                Send
-                            </button>
-                            <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-2 rounded">
-                                Buy
-                            </button>
-                            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">
-                                Sell
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <?php endif;?>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Modal for Sending Crypto -->
+<div id="sendModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+        <form action="/nexus-crypto-wallet/crypto/send" method="post">
+        <h3 class="text-xl font-bold mb-4">Send <span id="cryptoName"></span></h3>
+        <label class="block text-sm mb-2">Nexus ID or Email</label>
+            <input type="hidden" id="cryptoSlug" name="slug">
+        <input type="text" id="recipient" name="receiver" class="w-full p-2 rounded bg-gray-700 text-white mb-4" placeholder="Enter Nexus ID or Email">
+
+        <label class="block text-sm mb-2">Amount</label>
+        <input type="number" id="sendAmount" name="amount" class="w-full p-2 rounded bg-gray-700 text-white mb-4" placeholder="Enter amount">
+
+        <div class="flex justify-end space-x-2">
+            <button id="closeModal" type="button" class="bg-gray-600 text-white px-4 py-2 rounded">Cancel</button>
+            <button id="confirmSend" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Send</button>
+        </div>
+        </form>
+    </div>
+</div>
+
 <!-- Footer -->
 <footer class="bg-gray-800 text-white py-8 mt-8">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <a href="/nexus-crypto-wallet">
-                    <img src="../img/logo-white.png" alt="Logo" />
-                </a>
-                <p class="text-sm">
-                    With no commissions and a simple user interface, Prouple is the most reliable way to trade for Cryptocurrency.
-                </p>
-                <div class="flex space-x-4 mt-4">
-                    <!-- Facebook -->
-                    <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" alt="Facebook" class="w-6 h-6 fill-white" />
-                    </a>
-                    <!-- Twitter -->
-                    <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/twitter.svg" alt="Twitter" class="w-6 h-6 fill-white" />
-                    </a>
-                    <!-- LinkedIn -->
-                    <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/linkedin.svg" alt="LinkedIn" class="w-6 h-6 fill-white" />
-                    </a>
-                    <!-- WhatsApp -->
-                    <a href="https://www.whatsapp.com" target="_blank" rel="noopener noreferrer">
-                        <img src="https://cdn.jsdelivr.net/npm/simple-icons/icons/whatsapp.svg" alt="WhatsApp" class="w-6 h-6 fill-white" />
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold mb-4">Explore</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-blue-500">About us</a></li>
-                    <li><a href="#" class="hover:text-blue-500">FAQ</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Blog</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold mb-4">Service</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-blue-500">Mining</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Control Data</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Design</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Security</a></li>
-                </ul>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold mb-4">Resource</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-blue-500">Style Guide</a></li>
-                    <li><a href="#" class="hover:text-blue-500">Change Log</a></li>
-                    <li><a href="#" class="hover:text-blue-500">License</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="text-center mt-8 text-sm">
-            &copy; 2023 design and developed by
-            <a href="#" class="text-blue-500 hover:underline">Programming Insider</a>.
-        </div>
+    <div class="container mx-auto px-4 text-center">
+        &copy; 2023 Designed and Developed by Programming Insider.
     </div>
 </footer>
+
 <script>
-    // Calculate percentages
-    const btc = 0.0123;
-    const eth = 1.254;
-    const sol = 15.62;
-    const total = btc + eth + sol;
+    // Get PHP Data for Chart
+    const cryptoData = <?= json_encode($cryptos ?? []) ?>;
+    const cryptoLabels = Object.keys(cryptoData);
+    const cryptoAmounts = Object.values(cryptoData);
+    const total = cryptoAmounts.reduce((sum, value) => sum + parseFloat(value), 0);
 
-    const btcPercentage = ((btc / total) * 100).toFixed(2);
-    const ethPercentage = ((eth / total) * 100).toFixed(2);
-    const solPercentage = ((sol / total) * 100).toFixed(2);
+    // Convert to percentages
+    const cryptoPercentages = cryptoAmounts.map(value => ((value / total) * 100).toFixed(2));
 
-    // Chart.js script for wallet statistics (Doughnut Chart)
+    // Create Chart.js Doughnut Chart
+    console.log("qqq"+document.getElementById('walletChart'))
     const ctx = document.getElementById('walletChart').getContext('2d');
-    const walletChart = new Chart(ctx, {
-        type: 'doughnut', // Changed from 'line' to 'doughnut'
-        data: {
-            labels: [
-                `Bitcoin (BTC) ${btcPercentage}%`,
-                `Ethereum (ETH) ${ethPercentage}%`,
-                `Solana (SOL) ${solPercentage}%`
-            ],
-            datasets: [{
-                label: 'Crypto Distribution',
-                data: [btc, eth, sol], // Example data for each crypto
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.6)',   // Red for Bitcoin
-                    'rgba(54, 162, 235, 0.6)',   // Blue for Ethereum
-                    'rgba(75, 192, 192, 0.6)'    // Green for Solana
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                },
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function (context) {
-                            const label = context.label || '';
-                            const value = context.raw || 0;
-                            const percentage = ((value / total) * 100).toFixed(2);
-                            return `${label}: ${value} (${percentage}%)`;
-                        }
-                    }
-                }
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: cryptoLabels.map((label, index) => `${label} ${cryptoPercentages[index]}%`),
+                datasets: [{
+                    data: cryptoAmounts,
+                    backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+                    borderWidth: 1
+                }]
             },
-            cutout: '70%', // Makes the chart look like a circle (not a full doughnut)
-        }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true, position: 'top' },
+                    tooltip: { enabled: true }
+                },
+                cutout: '70%',
+            }
+        });
+    } else {
+        console.error("Canvas element not found!");
+    }
+
+    // Modal Handling
+    const sendModal = document.getElementById('sendModal');
+    const cryptoName = document.getElementById('cryptoName');
+    const recipientInput = document.getElementById('recipient');
+    const sendAmountInput = document.getElementById('sendAmount');
+    let selectedCrypto = "USDT";
+
+    document.querySelectorAll('.sendCryptoBtn').forEach(button => {
+        button.addEventListener('click', () => {
+            selectedCrypto = button.dataset.crypto;
+            cryptoName.innerText = selectedCrypto;
+            document.getElementById('cryptoSlug').value = selectedCrypto; // Set slug
+            sendModal.classList.remove('hidden');
+        });
     });
+
+    document.getElementById('sendUsdtBtn').addEventListener('click', () => {
+        selectedCrypto = "USDT";
+        cryptoName.innerText = selectedCrypto;
+        document.getElementById('cryptoSlug').value = "usdt"; // Set slug to USDT
+        sendModal.classList.remove('hidden');
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        sendModal.classList.add('hidden');
+    });
+
+
 </script>
 </body>
 </html>

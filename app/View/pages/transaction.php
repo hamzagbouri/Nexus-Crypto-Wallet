@@ -80,6 +80,5 @@
         </tbody>
     </table>
 </div>
-<script src="../js/wallet.js"></script>
 </body>
 </html>

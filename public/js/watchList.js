@@ -4,38 +4,65 @@ const cryptoPrice = document.getElementById("cryptoPrice");
 const usdtBalanceText = document.getElementById("usdtBalanceText");
 const usdtBalance = document.getElementById("usdtBalance");
 const confirmTrade = document.getElementById("confirmTrade");
+const cryptoAmount = document.getElementById('cryptoAmount');
+const usdtAmount = document.getElementById('usdtAmount');
 
-document.querySelectorAll(".buy-btn, .sell-btn").forEach(button => {
+// Fonction d'affichage du modal
+document.querySelectorAll(".btn").forEach(button => {
     button.addEventListener("click", function () {
         const action = this.dataset.action;
-        const cryptoName = this.dataset.name;
-        const price = this.dataset.price;
-        const balance = 5000; // Example balance, replace with real data
+        const cryptoName = this.dataset.slug;
+        const price = parseFloat(this.dataset.price);
+        const balance = parseFloat(this.dataset.amount) || 0;
 
-        // Set modal content
+        // Vérifier si le prix est bien défini
+        if (isNaN(price) || price <= 0) {
+            alert("Erreur : prix invalide !");
+            return;
+        }
+
+        // Mise à jour du modal
         modalTitle.textContent = `${action} ${cryptoName}`;
-        cryptoPrice.textContent = price;
+        cryptoPrice.textContent = price
+        document.getElementById('crypto').value = cryptoName;
+        document.getElementById('cPrice').value = price
 
         if (action === "Sell") {
             usdtBalanceText.classList.remove("hidden");
-            usdtBalance.textContent = balance;
+            usdtBalance.textContent = balance
+            document.getElementById('action').value = "sell";
         } else {
             usdtBalanceText.classList.add("hidden");
+            document.getElementById('action').value = "buy";
         }
 
-        // Show modal
-        modal.classList.remove("hidden");
+        // Réinitialiser les champs d'entrée
+        cryptoAmount.value = "";
+        usdtAmount.value = "";
 
-        // Handle confirmation
-        confirmTrade.onclick = () => {
-            alert(`${action} confirmed for ${cryptoName}`);
-            closeModal();
-        };
+        // Afficher le modal
+        modal.classList.remove("hidden");
     });
 });
 
+// Fonction de conversion automatique
+function updateConversion() {
+    const price = parseFloat(cryptoPrice.textContent);
+    let cryptoVal = parseFloat(cryptoAmount.value) || 0;
+    let usdtVal = parseFloat(usdtAmount.value) || 0;
 
-// Close modal function
+    if (cryptoAmount === document.activeElement) {
+        usdtAmount.value = (cryptoVal * price);
+    } else if (usdtAmount === document.activeElement) {
+        cryptoAmount.value = (usdtVal / price);
+    }
+}
+
+// Écouteurs d'événements pour la conversion
+cryptoAmount.addEventListener('input', updateConversion);
+usdtAmount.addEventListener('input', updateConversion);
+
+// Fonction pour fermer le modal
 function closeModal() {
-    document.getElementById("tradeModal").classList.add("hidden");
+    modal.classList.add("hidden");
 }

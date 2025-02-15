@@ -42,4 +42,3 @@
 
 
 
-<script src="../js/wallet.js"></script>

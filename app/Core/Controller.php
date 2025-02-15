@@ -2,12 +2,15 @@
 
 namespace App\core;
 use App\Model\Session;
+use App\Model\User;
+
 class Controller {
 
 
     public function view($view, $data = []) {
 
         if(file_exists('../app/view/' . $view . '.php')) {
+
             Session::ActiverSession();
             $logged = false;
             // Load  lview file
