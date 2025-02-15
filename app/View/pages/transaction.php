@@ -28,56 +28,56 @@
             <th class="p-3 text-left">Date</th>
         </tr>
         </thead>
-        <tbody>
-        <?php
-        // Static transactions array
-        $transactions = [
-            [
-                "id" => 1,
-                "transaction_type" => "Buy",
-                "crypto_name" => "Bitcoin",
-                "symbol" => "BTC",
-                "amount" => "0.5",
-                "prix_crypto" => "30000",
-                "transaction_date" => "2025-02-10",
-                "receiver_id" => null
-            ],
-            [
-                "id" => 2,
-                "transaction_type" => "Sell",
-                "crypto_name" => "Ethereum",
-                "symbol" => "ETH",
-                "amount" => "0.2",
-                "prix_crypto" => "2000",
-                "transaction_date" => "2025-02-11",
-                "receiver_id" => null
-            ],
-            [
-                "id" => 3,
-                "transaction_type" => "Send",
-                "crypto_name" => "USDT",
-                "symbol" => "USDT",
-                "amount" => "100",
-                "prix_crypto" => "1",
-                "transaction_date" => "2025-02-12",
-                "receiver_id" => "123456" // Example receiver ID
-            ],
-        ];
-
-        foreach ($transactions as $index => $transaction): ?>
-            <tr class="border-b border-gray-700">
-                <td class="p-3"><?= $index + 1 ?></td>
-                <td class="p-3"><?= htmlspecialchars($transaction['transaction_type']) ?></td>
-                <td class="p-3"><?= htmlspecialchars($transaction['crypto_name']) ?> (<?= htmlspecialchars($transaction['symbol']) ?>)</td>
-                <td class="p-3"><?= htmlspecialchars($transaction['amount']) ?></td>
-                <td class="p-3">$<?= htmlspecialchars($transaction['prix_crypto']) ?></td>
-                <td class="p-3">
-                    <?= $transaction['transaction_type'] === "Send" ? htmlspecialchars($transaction['receiver_id']) : "-" ?>
-                </td>
-                <td class="p-3"><?= htmlspecialchars($transaction['transaction_date']) ?></td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
+            <tbody>
+            <?php
+            // Static transactions array
+            $transactions = [
+                [
+                    "id" => 1,
+                    "transaction_type" => "Buy",
+                    "crypto_name" => "Bitcoin",
+                    "symbol" => "BTC",
+                    "amount" => "0.5",
+                    "prix_crypto" => "30000",
+                    "transaction_date" => "2025-02-10",
+                    "receiver_id" => null
+                ],
+                [
+                    "id" => 2,
+                    "transaction_type" => "Sell",
+                    "crypto_name" => "Ethereum",
+                    "symbol" => "ETH",
+                    "amount" => "0.2",
+                    "prix_crypto" => "2000",
+                    "transaction_date" => "2025-02-11",
+                    "receiver_id" => null
+                ],
+                [
+                    "id" => 3,
+                    "transaction_type" => "Send",
+                    "crypto_name" => "USDT",
+                    "symbol" => "USDT",
+                    "amount" => "100",
+                    "prix_crypto" => "1",
+                    "transaction_date" => "2025-02-12",
+                    "receiver_id" => "123456" // Example receiver ID
+                ],
+            ];
+            $index=1;
+            foreach ($data['transactions'] as $transaction): ?>
+                <tr class="border-b border-gray-700">
+                    <td class="p-3"><?= $index ?></td>
+                    <td class="p-3"><?= htmlspecialchars($transaction->getTransactionType()) ?></td>
+                    <td class="p-3"><?= htmlspecialchars($transaction->getCrypto()) ?> </td>
+                    <td class="p-3"><?= htmlspecialchars($transaction->getAmount())?></td>
+                    <td class="p-3">$<?= htmlspecialchars($transaction->getPrixCrypto()) ?></td>
+                    <td class="p-3">
+                        <?= $transaction->getTransactionType() === "Send" ? htmlspecialchars($transaction->getReceiver()->getEmail()) : "-" ?>
+                    </td>
+                    <td class="p-3"><?= htmlspecialchars($transaction->getDateTransaction()) ?></td>
+                </tr>
+            <?php $index++; endforeach; ?>
+            </tbody>
     </table>
 </div>
 </body>

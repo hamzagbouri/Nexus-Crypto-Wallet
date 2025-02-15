@@ -211,13 +211,16 @@ class User {
         return $this->usdt_balance;
     }
 
-    public function setUsdtBalance($usdt_balancee) {
+    public function setUsdtBalance($usdt_balancee, $isSend = false){
         $this->usdt_balance = $usdt_balancee;
-        Session::ActiverSession();
-        if(isset($_SESSION['userData'])){
-            unset($_SESSION['userData']);
+        if (!$isSend) {
+            Session::ActiverSession();
+            if(isset($_SESSION['userData'])){
+                unset($_SESSION['userData']);
+            }
+            $_SESSION['userData'] = serialize($this);
         }
-        $_SESSION['userData'] = serialize($this);
+
     }
 }
 ?>

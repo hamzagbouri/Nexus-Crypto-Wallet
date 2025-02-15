@@ -11,12 +11,15 @@ use Exception;
 class Crypto {
     private $user;
     private $wallet;
+    private $mail;
 
     public function __construct() {
         Session::ActiverSession();
 
         $this->user = unserialize($_SESSION['userData']);
         $this->wallet = unserialize($_SESSION['wallet']);
+        $this->mail = new Mail();
+
     }
 
     public function buy($id_crypto, $amount, $price) {
@@ -43,10 +46,17 @@ class Crypto {
         $stmt->bindParam(':amount', $amount);
         $stmt->execute();
         $this->wallet = Wallet::getWalletForUser($this->user->getId());
-        echo "<pre>";
-        print_r($_SESSION);
-        echo "</pre>";
+        Transaction::create($amount, "Buy", $price, $this->user->getId(), null, $id_crypto);
+
         $this->updateUserBalance($this->user->getUsdtBalance() - $totalCost);
+        $email = $this->user->getEmail();
+        $subject = "Achat de cryptomonnaie confirme";
+        $body = "Bonjour " . $this->user->getNom() . ",\n\n";
+        $body .= "Votre achat de " . $amount . " unites de la cryptomonnaie " . $id_crypto . " a ete effectue avec succes.\n";
+        $body .= "Montant total dépense : " . $totalCost . " USDT.\n\n";
+        $body .= "Merci d'utiliser notre plateforme.";
+
+        $this->mail->sendNotification($email, $body, $subject);
     }
 
     public function sell($id_crypto, $amount, $price) {
@@ -74,10 +84,18 @@ class Crypto {
 
         $stmt->execute();
 
+        Transaction::create($amount, "Sell", $price, $this->user->getId(), null, $id_crypto);
         // Update user balance
         $totalGain = $amount * $price;
         $this->updateUserBalance($this->user->getUsdtBalance() + $totalGain);
+        $email = $this->user->getEmail();
+        $subject = "Vente de cryptomonnaie confirmee";
+        $body = "Bonjour " . $this->user->getNom() . ",\n\n";
+        $body .= "Vous avez vendu " . $amount . " unités de la cryptomonnaie " . $id_crypto . " avec succes.\n";
+        $body .= "Montant total reçu : " . $totalGain . " USDT.\n\n";
+        $body .= "Merci d'utiliser notre plateforme.";
 
+        $this->mail->sendNotification($email, $body, $subject);
         return 'DOne';
 
     }
@@ -131,13 +149,16 @@ class Crypto {
             $this->updateUserBalance($this->user->getUsdtBalance() - $amount);
 
             // Add to receiver
-            $receiverUser->setUsdtBalance($receiverUser->getUsdtBalance() + $amount);
+            $receiverUser->setUsdtBalance($receiverUser->getUsdtBalance() + $amount,true);
             $recei = $receiverUser->getUsdtBalance();
             $receiverId = $receiverUser->getId();
             $stmt = $pdo->prepare("UPDATE users SET usdt_balance = :balance WHERE id_user = :id");
             $stmt->bindParam(':balance', $recei);
             $stmt->bindParam(':id', $receiverId);
             $stmt->execute();
+            var_dump("Creating transaction", $amount, "Send", null, $this->user->getId(), $receiver, $crypto);
+            Transaction::create($amount, "Send", null, $this->user->getId(), $receiverUser->getId(), $crypto);
+            $this->sendTransferNotification($this->user, $receiverUser, $crypto, $amount);
 
             return "USDT transfer successful.";
         }
@@ -176,8 +197,33 @@ class Crypto {
         $stmt->bindParam(':id_crypto', $crypto, PDO::PARAM_STR);
         $stmt->bindParam(':amount', $amount, PDO::PARAM_STR);
         $stmt->execute();
-
+        var_dump("Creating transaction", $amount, "Send", null, $this->user->getId(), $receiver, $crypto);
+        Transaction::create($amount, "Send", null, $this->user->getId(), $receiverUser->getId(), $crypto);
+        $this->sendTransferNotification($this->user, $receiverUser, $crypto, $amount);
         return "Crypto transfer successful.";
     }
+    private function sendTransferNotification($sender, $receiver, $crypto, $amount)
+    {
+        // Email de l'expéditeur
+        $senderEmail = $sender->getEmail();
+        $receiverEmail = $receiver->getEmail();
+
+        // Sujet et message pour l'expéditeur
+        $subjectSender = "Confirmation de votre transfert de $crypto";
+        $bodySender = "Bonjour " . $sender->getNom() . ",\n\n";
+        $bodySender .= "Vous avez envoyé " . $amount . " unités de " . strtoupper($crypto) . " à " . $receiver->getNom() . " avec succès.\n\n";
+        $bodySender .= "Merci d'utiliser notre plateforme.";
+
+        // Sujet et message pour le destinataire
+        $subjectReceiver = "Vous avez reçu un transfert de $crypto";
+        $bodyReceiver = "Bonjour " . $receiver->getNom() . ",\n\n";
+        $bodyReceiver .= "Vous avez reçu " . $amount . " unités de " . strtoupper($crypto) . " de la part de " . $sender->getNom() . ".\n\n";
+        $bodyReceiver .= "Merci d'utiliser notre plateforme.";
+
+        // Envoi des emails
+        $this->mail->sendNotification($senderEmail, $bodySender, $subjectSender);
+        $this->mail->sendNotification($receiverEmail, $bodyReceiver, $subjectReceiver);
+    }
+
 
 }

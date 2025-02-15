@@ -42,4 +42,30 @@ class Mail {
             return "Erreur lors de l'envoi du mail : {$mail->ErrorInfo}";
         }
     }
+    public function sendNotification($email, $body,$subject) {
+        $mail = new PHPMailer(true);
+
+        try {
+            // Configuration SMTP
+            $mail->isSMTP();
+            $mail->Host       = $this->config['smtp_host'];
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $this->config['smtp_user'];
+            $mail->Password   = $this->config['smtp_pass'];
+            $mail->SMTPSecure = $this->config['smtp_secure'];
+            $mail->Port       = $this->config['smtp_port'];
+
+            // Paramètres de l'email
+            $mail->setFrom($this->config['from_email'], $this->config['from_name']);
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = "$body";
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            return "Erreur lors de l'envoi du mail : {$mail->ErrorInfo}";
+        }
+    }
 }

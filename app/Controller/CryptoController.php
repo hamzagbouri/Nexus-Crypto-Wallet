@@ -56,7 +56,7 @@ class CryptoController extends Controller
             var_dump($crypto->send($receiver, $slug, $amount));
 
 
-        header('Location: /nexus-crypto-wallet/home/transaction');
+//        header('Location: /nexus-crypto-wallet/home/transaction');
 
     }
 

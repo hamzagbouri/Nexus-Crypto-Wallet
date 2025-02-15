@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\core\Controller;
 use App\Model\Session;
+use App\Model\Transaction;
 use App\Model\Wallet;
 use App\Model\Watchlist;
 
@@ -80,7 +81,11 @@ print_r($_SESSION);
     }
     public function transaction()
     {
-        $this->view('pages/transaction');
+        Session::ActiverSession();
+        $user = unserialize($_SESSION['userData']);
+        $user_id = $user->getId();
+        $data['transactions'] = Transaction::getUserTransaction($user_id);
+        $this->view('pages/transaction',$data);
     }
     public function wallet() {
         Session::ActiverSession();
